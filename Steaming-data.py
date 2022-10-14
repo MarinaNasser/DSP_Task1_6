@@ -24,7 +24,7 @@ p.line(x="x", y="y", source=source)
 def update():
     new_data=dict(x=[datetime.now()], y=[create_value()])
     source.stream(new_data, rollover=200)
-    p.title.text="Now Streaming %s Data" % select.value
+    p.title.text="Streaming %s Data" % select.value
 
 
 #Callback function
@@ -47,17 +47,17 @@ p.xaxis.formatter= DatetimeTickFormatter(
 )
 
 p.xaxis.major_label_orientation=radians(80)
-p.xaxis.axis_label ="Date"
+p.xaxis.axis_label ="Time"
 p.yaxis.axis_label ="Value"
 
 #Create Selection widget
-options= [("stock1", "stock one"),("stock2", "stocktwo")]
-select = Select(title="Market Name", value="stock1", options=options)
+options= [("Data 1", "Data one"),("Data 2", "Data two")]
+select = Select(title="", value="Data 1", options=options)
 select.on_change("value", update_intermed)
 
 #Config Layout
 lay_out= layout([[p],[select]])
-curdoc().title = "Streaming Stock Data Example"
+curdoc().title = "Streaming Data Example"
 curdoc().add_root(lay_out)
 curdoc().add_periodic_callback(update, 500)
 
