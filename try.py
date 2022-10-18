@@ -1,10 +1,10 @@
-import streamlit as st
 import numpy as np
-Amplitude = st.sidebar.slider('Amplitude', 0, 130, 25)
-Frequency = st.slider('Frequency', 0, 130, 25)
-def sin_wave_signal(Amplitude,Phase,signalFrequency,samplingFrequency):
-    samplingPeriod=1/samplingFrequency
-    NumOfsamples=int(samplingFrequency/signalFrequency)                   #number of samples
-    x_axis=np.linspace(0,(NumOfsamples-1)*samplingPeriod , NumOfsamples) #time steps
-    y_axis=Amplitude
-    np.sin(2np.pisignalFrequency*x_axis+Phase)
+from scipy import signal
+x = np.linspace(0, 10, 20, endpoint=False)
+y = np.cos(-x**2/6.0)
+f = signal.resample(y, 100)
+xnew = np.linspace(0, 10, 400, endpoint=False)
+import matplotlib.pyplot as plt
+plt.plot(x, y, 'go-', xnew, f, '.-', 10, y[0], 'ro')
+plt.legend(['data', 'resampled'], loc='best')
+plt.show()

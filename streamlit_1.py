@@ -12,7 +12,7 @@ Amplitude = st.sidebar.slider('Amplitude', 0, 130, 25)
 Frequency = st.slider('Frequency', 0.1, 1000.0, 25.0)
 
 f = 20 # Hz
-t = np.linspace(0, 0.5, 200)
+t = np.linspace(0, 0.5, 1000)
 x1 = np.sin(2 * np.pi * f * t)
 
 s_rate = Frequency # Hz. Here the sampling frequency is less than the requirement of sampling theorem
