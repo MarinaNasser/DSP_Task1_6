@@ -39,6 +39,7 @@ st.text('Before Sampling')
 
 fig1,ax1 = plt.subplots(1,1)
 ax1.plot(t,y1)
+plt.grid()
 st.pyplot(fig1)
 
 
@@ -52,9 +53,11 @@ nT = n * T
 y2 = np.sin(2 * np.pi * frequency * nT) # Since for sampling t = nT.
 
 
-fig,ax = plt.subplots(1,1)
+fig2,ax2 = plt.subplots(1,1)
 #ax.plot(nT,y2)
-ax=plt.stem(nT,y2,'m','g-')
+ax2=plt.stem(nT,y2,'m','g-')
 st.text('After Sampling')
-st.pyplot(fig)
+plt.grid()
+st.pyplot(fig2)
+
 
