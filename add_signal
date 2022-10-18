@@ -48,7 +48,9 @@ added_offset = st.sidebar.slider('Added Offset', -5, 5, 1)
 
 if st.sidebar.button('Add Signal'):
     y1 = y1 + added_offset + added_amplitude * np.sin(2 * np.pi * added_frequency * t + added_phase)
-    
+
+if st.sidebar.button('Remove Signal'):
+    y1 = y1 - added_offset - added_amplitude * np.sin(2 * np.pi * added_frequency * t + added_phase)
 
 st.text('Before Sampling')
 
