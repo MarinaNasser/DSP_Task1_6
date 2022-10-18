@@ -1,20 +1,26 @@
-import streamlit as st
-import pandas as pd
+import streamlit as st # data web app development
 import matplotlib.pyplot as plt
-import numpy as np
+import numpy as np  # np mean, np random ,np asarray, np 
+import pandas as pd  # read csv, df manipulation
 from bokeh.layouts import column, row
 from bokeh.models import CustomJS, Slider
 from bokeh.plotting import ColumnDataSource, figure, show
 import random
-import time
+
+#import plotly.express as px  # interactive charts
 
 
+st.set_page_config(
+    page_title="DSP TASK 1",
+    page_icon="✅",
+
+)
 
 st.title('DSP')
 #st.text('this is a webpage to practice nyquest theory')
 
 
-upload_file = st.file_uploader('upload your file here')
+#upload_file = st.file_uploader('upload your file here')
 
 # Amplitude = st.sidebar.slider('amplitude', 0, 130, 25)
 
