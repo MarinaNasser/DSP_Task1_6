@@ -52,9 +52,9 @@ nT = n * T
 y2 = np.sin(2 * np.pi * frequency * nT) # Since for sampling t = nT.
 
 
-
 fig,ax = plt.subplots(1,1)
-ax.plot(nT,y2)
+#ax.plot(nT,y2)
+ax=plt.stem(nT,y2,'m','g-')
 st.text('After Sampling')
 st.pyplot(fig)
 
