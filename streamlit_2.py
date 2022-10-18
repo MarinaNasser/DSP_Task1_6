@@ -5,6 +5,9 @@ import numpy as np
 from bokeh.layouts import column, row
 from bokeh.models import CustomJS, Slider
 from bokeh.plotting import ColumnDataSource, figure, show
+import random
+import time
+
 
 
 st.title('DSP')
@@ -14,14 +17,21 @@ upload_file = st.file_uploader('upload your file here')
 
 Amplitude = st.sidebar.slider('amplitude', 0, 130, 25)
 
-amplitude = st.slider('Amplitude', 0.1, 10.0, 1.0)
-phase = st.slider('Phase', 0, 7, 0)
-frequency = st.slider('Frequency', 1.0, 100.0, 20.0)
-offset = st.slider('Offset', -5, 5, 0)
+amplitude = st.sidebar.slider('Amplitude', 0.1, 10.0, 1.0)
+phase = st.sidebar.slider('Phase', 0, 7, 0)
+frequency = st.sidebar.slider('Frequency', 1.0, 100.0, 20.0)
+offset = st.sidebar.slider('Offset', -5, 5, 0)
 
-f = 20 # Hz
+freq = 20 # Hz
 t = np.linspace(0, 0.5, 200)
 y1 = offset + amplitude * np.sin(2 * np.pi * frequency * t + phase)
+
+noise=0.0008*np.asarray(random.sample(range(0,1000),200))
+
+if st.sidebar.button('Add noise'):
+    y1 = offset + amplitude * np.sin(2 * np.pi * frequency * t + phase)+noise
+if st.sidebar.button('Delete noise'):
+    y1 = offset + amplitude * np.sin(2 * np.pi * frequency * t + phase)
 
 
 fig1,ax1 = plt.subplots(1,1)
