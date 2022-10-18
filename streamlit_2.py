@@ -11,16 +11,18 @@ import time
 
 
 st.title('DSP')
-st.text('this is a webpage to practice nyquest theory')
+#st.text('this is a webpage to practice nyquest theory')
+
 
 upload_file = st.file_uploader('upload your file here')
 
-Amplitude = st.sidebar.slider('amplitude', 0, 130, 25)
+# Amplitude = st.sidebar.slider('amplitude', 0, 130, 25)
 
 amplitude = st.sidebar.slider('Amplitude', 0.1, 10.0, 1.0)
 phase = st.sidebar.slider('Phase', 0, 7, 0)
 frequency = st.sidebar.slider('Frequency', 1.0, 100.0, 20.0)
 offset = st.sidebar.slider('Offset', -5, 5, 0)
+samplingFrequency = st.sidebar.slider('Sampling frequency', 1.0, 1000.0, 50.0)
 
 freq = 20 # Hz
 t = np.linspace(0, 0.5, 200)
@@ -33,12 +35,13 @@ if st.sidebar.button('Add noise'):
 if st.sidebar.button('Delete noise'):
     y1 = offset + amplitude * np.sin(2 * np.pi * frequency * t + phase)
 
+st.text('Before Sampling')
 
 fig1,ax1 = plt.subplots(1,1)
 ax1.plot(t,y1)
 st.pyplot(fig1)
 
-samplingFrequency = st.slider('Sampling frequency', 1.0, 1000.0, 50.0)
+
 
 print(samplingFrequency)
 T = 1 / samplingFrequency
@@ -52,6 +55,6 @@ y2 = np.sin(2 * np.pi * frequency * nT) # Since for sampling t = nT.
 
 fig,ax = plt.subplots(1,1)
 ax.plot(nT,y2)
-
+st.text('After Sampling')
 st.pyplot(fig)
 
