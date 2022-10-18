@@ -1,0 +1,13 @@
+added_amplitude = st.sidebar.slider('Added Amplitude', 0.1, 10.0, 0.1)
+added_phase = st.sidebar.slider('Added Phase', 0, 7, 1)
+added_frequency = st.sidebar.slider('Added Frequency', 1.0, 100.0, 50.0)
+added_offset = st.sidebar.slider('Added Offset', -5, 5, 1)
+add = st.sidebar.button("Add")
+
+def add_signal(y1, added_offset, added_amplitude, added_frequency, added_phase, y2):
+    y1 = y1 + added_offset + added_amplitude * np.sin(2 * np.pi * added_frequency * t + added_phase)
+    y2 = y2 + np.sin(2 * np.pi * added_frequency * nT)
+    return y1, y2
+
+if add:
+    add_signal(y1, added_offset, added_amplitude, added_frequency, added_phase, y2)
