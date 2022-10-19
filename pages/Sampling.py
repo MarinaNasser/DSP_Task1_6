@@ -20,6 +20,7 @@ amplitude = st.sidebar.slider('Amplitude', 0.1, 10.0, 1.0)
 phase = st.sidebar.slider('Phase', 0, 7, 0)
 frequency = st.sidebar.slider('Frequency', 1.0, 100.0, 20.0)
 offset = st.sidebar.slider('Offset', -5, 5, 0)
+SNR =st.sidebar.slider('S/N ratio', -5, 5, 0)
 samplingFrequency = st.sidebar.slider('Sampling frequency', 1.0, 1000.0, 50.0)
 
 freq = 20 # Hz
