@@ -12,115 +12,19 @@ from matplotlib.animation import FuncAnimation
 st.sidebar.markdown("Signal Viewer")
 
 
-#msh sha8aaaaal
+uploaded_file = st.file_uploader("Choose a CSV file")
 
-# # initializing a figure in 
-# # which the graph will be plotted
-# fig = plt.figure() 
-   
-# # marking the x-axis and y-axis
-# axis = plt.axes(xlim =(0, 4), 
-#                 ylim =(-2, 2)) 
-  
-# # initializing a line variable
-# line, = axis.plot([], [], lw = 3) 
-   
-# # data which the line will 
-# # contain (x, y)
-# def init(): 
-#     line.set_data([], [])
-#     return line,
-   
-# def animate(i):
-#     x = np.linspace(0, 4, 1000)
-   
-#     # plots a sine graph
-#     y = np.sin(2 * np.pi * (x - 0.01 * i))
-#     line.set_data(x, y)
-      
-#     return line,
-   
-# anim = FuncAnimation(fig, animate, init_func = init,
-#                      frames = 200, interval = 20, blit = True)
-  
-   
-# # anim.save('Signal Viewer.mp4', 
-# #           writer = 'ffmpeg', fps = 30)
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    st.dataframe(df)
+    # st.write(df)
 
+    list_of_columns=df.columns
 
-
-
-
-
-
-
-
-
-#msh sha8aaaal
-
-plt.style.use('seaborn-pastel')
-
-fig = plt.figure()
-ax = plt.axes(xlim=(0, 4), ylim=(-2, 2))
-line, = ax.plot([], [], lw=3)
-
-def init():
-    line.set_data([], [])
-    return line,
-def animate(i):
-    x = np.linspace(0, 4, 1000)
-    y = np.sin(2 * np.pi * (x - 0.01 * i))
-    line.set_data(x, y)
-    return line,
-
-anim = FuncAnimation(fig, animate, init_func=init,
-                               frames=200, interval=20, blit=True)
-
-
-anim.save('sine_wave.gif', writer='imagemagick')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# uploaded_file = st.file_uploader("Choose a CSV file")
-
-# if uploaded_file is not None:
-#     df = pd.read_csv(uploaded_file)
-#     st.dataframe(df)
-#     # st.write(df)
-
-#     list_of_columns=df.columns
-
-#     fig, ax = plt.subplots()
-#     # fig.set_animated()
-#     ax.plot(df[list_of_columns[0]],df[list_of_columns[1]])
-#     st.pyplot(fig)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    fig, ax = plt.subplots()
+    # fig.set_animated()
+    ax.plot(df[list_of_columns[0]],df[list_of_columns[1]])
+    st.pyplot(fig)
 
 
 
