@@ -10,6 +10,9 @@ from bokeh.models import CustomJS, Slider
 from bokeh.plotting import ColumnDataSource, figure, show
 import random
 from scipy import signal
+
+st.set_page_config(layout="wide")
+
 st.sidebar.markdown("Generating signals")
 
 if 'checkBoxes' not in st.session_state:
@@ -30,24 +33,24 @@ if 'signal' not in st.session_state:
 # Amplitude = st.sidebar.slider('amplitude', 0, 130, 25)
 
 amplitude = st.sidebar.slider('Amplitude', 1.0, 10.0, 1.0)
-phase = st.sidebar.slider('Phase', 0, 7, 0)
 frequency = st.sidebar.slider('Frequency', 1.0, 20.0, 1.0)
-offset = st.sidebar.slider('Offset', -5, 5, 0)
 
 
 freq = 20 # Hz
 t = np.linspace(0, 5, 3000)
-y1 = offset + amplitude * np.sin(2 * np.pi * frequency * t + phase)
+y1 = amplitude * np.sin(2 * np.pi * frequency * t )
 
 noise=0.0002*np.asarray(random.sample(range(0,3000),3000))
 
 if st.sidebar.button('Add noise'):
-    y1 = offset + amplitude * np.sin(2 * np.pi * frequency * t + phase)+noise
+    y1 = amplitude * np.sin(2 * np.pi * frequency * t )+noise
+
+
 if st.sidebar.button('Delete noise'):
-    y1 = offset + amplitude * np.sin(2 * np.pi * frequency * t + phase)
+    y1 = amplitude * np.sin(2 * np.pi * frequency * t )
 if st.sidebar.button('Generate'):
     st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
-    y1 = offset + amplitude * np.sin(2 * np.pi * frequency * t + phase)
+    y1 = amplitude * np.sin(2 * np.pi * frequency * t )
     st.session_state['signal'][st.session_state['primaryKey']] = y1
 
 
@@ -65,8 +68,8 @@ if st.sidebar.button('delete'):
         st.session_state['checkBoxes'].pop(index)
         st.session_state['signal'].pop(index)
 
-for index,sgnal in st.session_state['signal'].items():
-    st.session_state['checkBoxes'][index] = st.sidebar.checkbox('signal {}'.format(index))
+
+
 
 st.text('Before Sampling')
 
@@ -76,20 +79,6 @@ fig1,ax1 = plt.subplots(1,1)
 ax1.plot(t,y1)
 ax1.grid()
 st.plotly_chart(fig1)
-
-
-
-st.write('Generated signals')
-for index,sgnal in st.session_state['signal'].items():
-    st.write('Signal {}'.format(index))
-    fig,ax = plt.subplots(1,1)
-    ax.plot(t,sgnal)
-    ax.grid()
-    st.plotly_chart(fig)
-
-st.write(st.session_state['signal'])
-
-
 
 
 if st.sidebar.button('add'):
@@ -104,7 +93,26 @@ if st.sidebar.button('add'):
                     
     # if there is anything to plot
     if atLeastOneChecked:
-        fig1,ax1 = plt.subplots(1,1)
-        ax1.plot(t,sum)
-        ax1.grid()
-        st.plotly_chart(fig1)
+        st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
+        st.session_state['signal'][st.session_state['primaryKey']] = sum
+
+
+expander = st.expander('Generated signals')
+for index,sgnal in st.session_state['signal'].items():
+    st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index))
+
+
+
+# st.write('Generated signals')
+for index,sgnal in st.session_state['signal'].items():
+    if st.session_state['checkBoxes'][index]:
+        st.write('Signal {}'.format(index))
+        fig,ax = plt.subplots(1,1)
+        ax.plot(t,sgnal)
+        ax.grid()
+        st.plotly_chart(fig)
+
+# st.write(st.session_state['signal'])
+
+
+
