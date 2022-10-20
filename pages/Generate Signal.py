@@ -29,7 +29,6 @@ if 'signal' not in st.session_state:
 
 amplitude = st.sidebar.slider('Amplitude', 1.0, 10.0, 1.0)
 frequency = st.sidebar.slider('Frequency', 1.0, 20.0, 1.0)
-offset = st.sidebar.slider('Offset', -5, 5, 0)
 snr_db = st.sidebar.slider('SNR', 1.0, 50.0, 1.0) #units
 
 
@@ -38,7 +37,7 @@ freq = 20 # Hz
 t = np.linspace(0, 5, 3000)
 
 
-signal = offset + amplitude * np.sin(2 * np.pi * frequency * t + phase)
+signal = amplitude * np.sin(2 * np.pi * frequency * t)
 power=signal**2
 signal_power_db=10*np.log10(power)
 signal_average_power=np.mean(power) #calculate signal power
@@ -92,15 +91,15 @@ st.plotly_chart(fig1)
 
 
 
-st.write('Generated signals')
-for index,sgnal in st.session_state['signal'].items():
-    st.write('Signal {}'.format(index))
-    fig,ax = plt.subplots(1,1)
-    ax.plot(t,sgnal , color='red',linewidth=5)
-    ax.grid()
-    st.plotly_chart(fig)
+# # st.write('Generated signals')
+# for index,sgnal in st.session_state['signal'].items():
+#     st.write('Signal {}'.format(index))
+#     fig,ax = plt.subplots(1,1)
+#     ax.plot(t,sgnal , color='red',linewidth=5)
+#     ax.grid()
+#     st.plotly_chart(fig)
 
-st.write(st.session_state['signal'])
+# st.write(st.session_state['signal'])
 
 
 
