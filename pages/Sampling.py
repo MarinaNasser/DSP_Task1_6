@@ -1,17 +1,12 @@
 import streamlit as st
-import streamlit as st # data web app development
-import matplotlib.pyplot as plt
 import numpy as np  # np mean, np random ,np asarray, np 
-import pandas as pd  # read csv, df manipulation
-from bokeh.layouts import column, row
-from bokeh.models import CustomJS, Slider
-from bokeh.plotting import ColumnDataSource, figure, show
-import random
-from scipy import signal
-st.sidebar.markdown("Sampling")
 
-#st.text('this is a webpage to practice nyquest theory')
 
+def signaltonoise(a, axis=0, ddof=0):
+    a = np.asanyarray(a)
+    m = a.mean(axis)
+    sd = a.std(axis=axis, ddof=ddof)
+    return np.where(sd == 0, 0, m/sd)
 
 #upload_file = st.file_uploader('upload your file here')
 
@@ -21,52 +16,31 @@ amplitude = st.sidebar.slider('Amplitude', 1.0, 10.0, 1.0)
 phase = st.sidebar.slider('Phase', 0, 7, 0)
 frequency = st.sidebar.slider('Frequency', 1.0, 20.0, 1.0)
 offset = st.sidebar.slider('Offset', -5, 5, 0)
-SNR =st.sidebar.slider('S/N ratio', 5, 40, 0)
-samplingFrequency = st.sidebar.slider('Sampling frequency', 1.0, 1000.0, 50.0)
+samplingFrequency = st.sidebar.slider('Sampling frequency', 1.0, 100.0, 2.0)
 
-freq = 20 # Hz
-t = np.linspace(0, 5, 3000)
-y1 = offset + amplitude * np.sin(2 * np.pi * frequency * t + phase)
-
-noise=0.0002*np.asarray(random.sample(range(0,3000),3000))
-
-if st.sidebar.button('Add noise'):
-    y1 = offset + amplitude * np.sin(2 * np.pi * frequency * t + phase)+noise
-if st.sidebar.button('Delete noise'):
-    y1 = offset + amplitude * np.sin(2 * np.pi * frequency * t + phase)
-
-st.text('Before Sampling')
-
-fig1,ax1 = plt.subplots(1,1)
-ax1.plot(t,y1)
-plt.grid()
-st.plotly_chart(fig1)
+# print(samplingFrequency)
+# T = 1 / samplingFrequency
+# n = np.arange(0, 5 / T)
+# # print(n)
+# nT = n * T
+# # print(nT)
+# y2 = np.sin(2 * np.pi * frequency * nT) # Since for sampling t = nT.
 
 
+# fig2,ax2 = plt.subplots(1,1)
+# #ax.plot(nT,y2)
+# # ax2=plt.stem(nT,y2,'m','g-')
+# f = signal.resample(y2, 200)
+# xnew = np.linspace(0, 5, 200, endpoint=False)
+# # import matplotlib.pyplot as plt
+# ax2.plot(nT, y2, 'go-', xnew, f, '.-')
+# # ax.legend(['data', 'resampled'], loc='best')
 
-print(samplingFrequency)
-T = 1 / samplingFrequency
-n = np.arange(0, 5 / T)
-# print(n)
-nT = n * T
-# print(nT)
-y2 = np.sin(2 * np.pi * frequency * nT) # Since for sampling t = nT.
-
-
-fig2,ax2 = plt.subplots(1,1)
-#ax.plot(nT,y2)
-# ax2=plt.stem(nT,y2,'m','g-')
-f = signal.resample(y2, 200)
-xnew = np.linspace(0, 5, 200, endpoint=False)
-# import matplotlib.pyplot as plt
-ax2.plot(nT, y2, 'go-', xnew, f, '.-')
-# ax.legend(['data', 'resampled'], loc='best')
-
-# plt.show()
+# # plt.show()
 
 
-st.plotly_chart(fig2)
-# ax2=plt.stem(nT,y2,'m','g-')
-# st.text('After Sampling')
-# plt.grid()
 # st.plotly_chart(fig2)
+# # ax2=plt.stem(nT,y2,'m','g-')
+# # st.text('After Sampling')
+# # plt.grid()
+# # st.plotly_chart(fig2)
