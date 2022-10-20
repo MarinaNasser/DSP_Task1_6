@@ -9,9 +9,6 @@ from matplotlib.animation import FuncAnimation
 
 
 
-st.sidebar.markdown("Signal Viewer")
-
-
 uploaded_file = st.file_uploader("Choose a CSV file")
 
 if uploaded_file is not None:
