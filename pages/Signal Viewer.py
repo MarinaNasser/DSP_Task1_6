@@ -13,7 +13,7 @@ uploaded_file = st.file_uploader("Choose a CSV file")
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
-    st.dataframe(df)
+    # st.dataframe(df)
     # st.write(df)
 
     list_of_columns=df.columns
@@ -21,7 +21,7 @@ if uploaded_file is not None:
     fig, ax = plt.subplots()
     # fig.set_animated()
     ax.plot(df[list_of_columns[0]],df[list_of_columns[1]])
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
 
 
