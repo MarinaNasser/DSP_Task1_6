@@ -32,8 +32,9 @@ if option:
     option = int(option[7:])
 
     selectedOptionFigure, selectedOptionAxis = plt.subplots(1, 1)
-    analogSignal_time = np.linspace(0, 5, 3000)
-    selectedOptionAxis.plot(analogSignal_time, st.session_state['signal'][option])
+    analogSignal_time = st.session_state['signal'][option][0]
+    analogSignalValue = st.session_state['signal'][option][1]
+    selectedOptionAxis.plot(analogSignal_time, analogSignalValue)
     selectedOptionAxis.grid()
     st.plotly_chart(selectedOptionFigure)
 
@@ -41,18 +42,18 @@ if option:
     print(samplingFrequency)
     samplingPeriod = 1 / samplingFrequency
 
-    discreteTimeUnnormalised = np.arange(0, 5 / samplingPeriod)
-    discreteTime = discreteTimeUnnormalised * samplingPeriod
+    discreteTimeUnNormalised = np.arange(analogSignal_time[0], (analogSignal_time[-1] - analogSignal_time[0]) / samplingPeriod)
+    discreteTime = discreteTimeUnNormalised * samplingPeriod
 
-    predict = interp1d(analogSignal_time, st.session_state['signal'][option], kind='quadratic')
+    predict = interp1d(analogSignal_time, analogSignalValue, kind='quadratic')
     signalAfterSampling = np.array([predict(t) for t in discreteTime])
 
-    interpolatedSignal, interpolatedAxis = plt.subplots(1, 1)
+    interpolatedSignalFigure, interpolatedSignalAxis = plt.subplots(1, 1)
 
-    reconstructionTimeAxis = np.linspace(0, analogSignal_time[-1], 400)
+    reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 400)
     signalAfterReconstruction = np.array([getYCoordinate(timePoint, signalAfterSampling, samplingPeriod) for timePoint in reconstructionTimeAxis])
 
-    interpolatedAxis.plot(discreteTime, signalAfterSampling, 'go-', reconstructionTimeAxis, signalAfterReconstruction, '.-')
-    st.plotly_chart(interpolatedSignal)
+    interpolatedSignalAxis.plot(discreteTime, signalAfterSampling, 'go-', reconstructionTimeAxis, signalAfterReconstruction, '.-')
+    st.plotly_chart(interpolatedSignalFigure)
 else:
     st.write('Generate signals then choose a one to sample')
