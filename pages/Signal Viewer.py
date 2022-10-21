@@ -19,7 +19,7 @@ if uploaded_file is not None:
     list_of_columns=df.columns
 
     fig, ax = plt.subplots()
-    # fig.set_animated()
+    df = df.drop_duplicates(keep = 'first',subset=[list_of_columns[0]])
     analogSignalTime = df[list_of_columns[0]].to_numpy()
     analogSignalValue = df[list_of_columns[1]].to_numpy()
     ax.plot(analogSignalTime,analogSignalValue)
@@ -30,8 +30,11 @@ if uploaded_file is not None:
         st.session_state['primaryKey'] = 0
     if 'signal' not in st.session_state:
         st.session_state['signal'] = {}
+    if 'uploaded' not in st.session_state:
+        st.session_state['uploaded'] = {}
+    
     st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
     st.session_state['signal'][st.session_state['primaryKey']] = [analogSignalTime,analogSignalValue]
-    
+    st.session_state['uploaded'][st.session_state['primaryKey']] = True
     st.plotly_chart(fig)
 

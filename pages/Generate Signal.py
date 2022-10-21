@@ -1,3 +1,4 @@
+from tkinter import HIDDEN
 import streamlit as st  # data web app development
 import matplotlib.pyplot as plt
 import numpy as np  # np mean, np random ,np asarray, np 
@@ -17,6 +18,9 @@ if 'primaryKey' not in st.session_state:
 
 if 'signal' not in st.session_state:
     st.session_state['signal'] = {}
+if 'uploaded' not in st.session_state:
+    st.session_state['uploaded'] = {}
+
 
 amplitude = st.sidebar.slider('Amplitude', 1, 10, 1)
 frequency = st.sidebar.slider('Frequency', 1, 20, 1)
@@ -53,6 +57,7 @@ else:
 if st.sidebar.button('Generate'):
     st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
     st.session_state['signal'][st.session_state['primaryKey']] = [analogSignal_time, changeableSignal]
+    st.session_state['uploaded'][st.session_state['primaryKey']] = False;
 
 # addressing the selected checkboxes and the other ones
 chosenCheckBoxes = []
@@ -73,7 +78,7 @@ st.text('Before Sampling')
 
 # showing the signal according the changes of the sidebar sliders
 changeableSignalFigure, changeableSignalAxis = plt.subplots(1, 1)
-changeableSignalAxis.plot(analogSignal_time, changeableSignal, color='red', linewidth=5)
+changeableSignalAxis.plot(analogSignal_time, changeableSignal, color='red', linewidth=2)
 changeableSignalAxis.grid()
 st.plotly_chart(changeableSignalFigure)
 
@@ -90,10 +95,14 @@ if st.sidebar.button('add'):
     if atLeastOneChecked:
         st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
         st.session_state['signal'][st.session_state['primaryKey']] = [analogSignal_time, summedSignal]
+        st.session_state['uploaded'][st.session_state['primaryKey']] = False
 
 # expander for the generated signals checkboxes
 expander = st.expander('Generated signals')
 for index, sgnal in st.session_state['signal'].items():
+    if st.session_state['uploaded'][index]:
+        st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index),disabled = True)
+        continue
     st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index))
 
 # viewing the generated signals
