@@ -3,12 +3,13 @@ import matplotlib.pyplot as plt
 from scipy import signal
 from scipy.interpolate import interp1d
 import numpy as np  # np mean, np random ,np asarray, np 
-
+import pandas as pd
 
 def getYCoordinate(newTimeAxisPoint, signalAfterSampling, samplingPeriod):
     summation = 0
     for n in range(0, len(signalAfterSampling)):
         summation = summation + signalAfterSampling[n] * np.sinc((1 / samplingPeriod) * (newTimeAxisPoint - n * samplingPeriod))
+    print(summation)
     return summation
 
 
@@ -38,22 +39,29 @@ if option:
     selectedOptionAxis.grid()
     st.plotly_chart(selectedOptionFigure)
 
-    samplingFrequency = st.sidebar.slider('Sampling frequency', 1, 100, 2)
+    samplingFrequency = st.sidebar.slider('Sampling frequency', 1.0, 100.0, 2.0)
     print(samplingFrequency)
     samplingPeriod = 1 / samplingFrequency
-
-    discreteTimeUnNormalised = np.arange(analogSignal_time[0], (analogSignal_time[-1] - analogSignal_time[0]) / samplingPeriod)
+    discreteTimeUnNormalised = np.arange(analogSignal_time[0]/samplingPeriod, analogSignal_time[-1] / samplingPeriod)
+    # st.write(discreteTimeUnNormalised)
     discreteTime = discreteTimeUnNormalised * samplingPeriod
-
+    # st.write(discreteTime)
+    
     predict = interp1d(analogSignal_time, analogSignalValue, kind='quadratic')
-    signalAfterSampling = np.array([predict(t) for t in discreteTime])
+    signalAfterSampling = np.array([predict(timePoint) for timePoint in discreteTime])
 
     interpolatedSignalFigure, interpolatedSignalAxis = plt.subplots(1, 1)
 
-    reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 400)
-    signalAfterReconstruction = np.array([getYCoordinate(timePoint, signalAfterSampling, samplingPeriod) for timePoint in reconstructionTimeAxis])
+    reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 400,endpoint=False)
+    # st.write(reconstructionTimeAxis)
 
+    signalAfterReconstruction = np.array([getYCoordinate(timePoint, signalAfterSampling, samplingPeriod) for timePoint in reconstructionTimeAxis])
+    st.write(signalAfterSampling)
+    st.write(signalAfterReconstruction)
+    
     interpolatedSignalAxis.plot(discreteTime, signalAfterSampling, 'go-', reconstructionTimeAxis, signalAfterReconstruction, '.-')
     st.plotly_chart(interpolatedSignalFigure)
+    st.write(signalAfterReconstruction)
+
 else:
     st.write('Generate signals then choose a one to sample')
