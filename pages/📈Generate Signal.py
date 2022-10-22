@@ -150,7 +150,7 @@ for index, sgnal in st.session_state['signal'].items():
 
 #--------------------------------------------------------------------
 #save file
-if st.button('Save 📩'):
+if st.button('Save as CSV 📩'):
     if len(st.session_state['signal'] )==0:
       st.warning('No signal is generated', icon="⚠️")
     elif len(chosenCheckBoxes)==0:
