@@ -1,7 +1,7 @@
 # Sampling-Studio
 Digital signal processing, Task 1
 
-In this studio you can 
+In this studio you can:
   1.enerate your own signal
   2.Add 2 or more signals together 
   3.Delete an added signal 
