@@ -13,9 +13,7 @@ uploaded_file = st.file_uploader("Choose a CSV file")
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
-    # st.dataframe(df)
-    # st.write(df)
-
+    
     list_of_columns=df.columns
 
     fig, ax = plt.subplots()
@@ -23,8 +21,8 @@ if uploaded_file is not None:
     analogSignalTime = df[list_of_columns[0]].to_numpy()
     analogSignalValue = df[list_of_columns[1]].to_numpy()
     ax.plot(analogSignalTime,analogSignalValue)
-    st.write(type(analogSignalTime))
-    st.write(type(analogSignalValue))
+    # st.write(type(analogSignalTime))
+    # st.write(type(analogSignalValue))
     
     if 'primaryKey' not in st.session_state:
         st.session_state['primaryKey'] = 0
