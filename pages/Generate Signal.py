@@ -4,7 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np  # np mean, np random ,np asarray, np 
 import pandas as pd
 
-st.set_page_config(layout="wide")
+col1, col2, col3 = st.columns(3)
+with col2:
+    st.title('Customise your signal')
 
 
 if 'noise' not in st.session_state:
@@ -24,10 +26,10 @@ if 'uploaded' not in st.session_state:
 
 
 #sliders
-
+color = st.sidebar.color_picker('Pick the signal color', '#00f900')
 amplitude = st.sidebar.slider('Amplitude', 1, 10, 1)
-frequency = st.sidebar.slider('Frequency', 1, 20, 1)
-snr_db = st.sidebar.slider('SNR', 1.0, 50.0, 1.0)  # units
+frequency = st.sidebar.slider('Frequency (Hz)', 1, 20, 1)
+snr_db = st.sidebar.slider('SNR (dB)', 1.0, 50.0, 1.0)  # units
 #--------------------------------------------------------------------
 
 analogSignal_time = np.linspace(0, 5, 3000) #x-axis
@@ -50,10 +52,11 @@ mean_noise = 0
 noise = np.random.normal(mean_noise, np.sqrt(noise_watts), len(changeableSignal))
 
 
-if st.sidebar.button('Add noise'):
+
+if st.sidebar.button('✖️Add noise'):
     st.session_state['noise'] = True
 
-if st.sidebar.button('Delete noise'):
+if st.sidebar.button('➖Delete noise'):
     st.session_state['noise'] = False
 
 # add noise or do not
@@ -67,7 +70,7 @@ else:
 
 
 # generate button
-if st.sidebar.button('Generate Signal'):
+if st.sidebar.button('Generate Signal ◀'):
     st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
     st.session_state['signal'][st.session_state['primaryKey']] = [analogSignal_time, changeableSignal]
     st.session_state['uploaded'][st.session_state['primaryKey']] = False;
@@ -84,23 +87,22 @@ for index, value in st.session_state['checkBoxes'].items():
         leftCheckBoxes.append(index)
 
 
-# deleting the selected signals from the checkboxes and from the st.session_state['signal']
-if st.sidebar.button('Delete Signal'):
-    for index in chosenCheckBoxes:
-        st.session_state['checkBoxes'].pop(index)
-        st.session_state['signal'].pop(index)
-
+st.sidebar.text('check the signal first')
 
 
 # showing the signal according to the changes of the sidebar sliders
 changeableSignalFigure, changeableSignalAxis = plt.subplots(1, 1)
-changeableSignalAxis.plot(analogSignal_time, changeableSignal, color='red', linewidth=3)
+changeableSignalAxis.plot(analogSignal_time, changeableSignal,  color=color, linewidth=3)
 changeableSignalAxis.grid()
-st.plotly_chart(changeableSignalFigure, linewidth=3)
+st.plotly_chart(changeableSignalFigure,  linewidth=3)
+
+
+
+
 
 
 # addition of more than one signal
-if st.sidebar.button('Add signal'):
+if st.sidebar.button('✖️Add Signals'):
     summedSignal = np.zeros(3000)
     atLeastOneChecked = False
 
@@ -113,6 +115,20 @@ if st.sidebar.button('Add signal'):
         st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
         st.session_state['signal'][st.session_state['primaryKey']] = [analogSignal_time, summedSignal]
         st.session_state['uploaded'][st.session_state['primaryKey']] = False
+
+
+
+
+
+# deleting the selected signals from the checkboxes and from the st.session_state['signal']
+if st.sidebar.button('➖Delete Signal'):
+    for index in chosenCheckBoxes:
+        st.session_state['checkBoxes'].pop(index)
+        st.session_state['signal'].pop(index)
+
+
+
+
 
 
 # expander for the generated signals checkboxes
@@ -134,7 +150,7 @@ for index, sgnal in st.session_state['signal'].items():
 
 #--------------------------------------------------------------------
 #save file
-if st.button('Save'):
+if st.button('Save 📩'):
     if len(st.session_state['signal'] )==0:
       st.warning('No signal is generated', icon="⚠️")
     elif len(chosenCheckBoxes)==0:

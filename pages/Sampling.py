@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy import signal
 from scipy.interpolate import interp1d
 import numpy as np  # np mean, np random ,np asarray, np 
-import pandas as pd
+
 
 def getYCoordinate(newTimeAxisPoint, signalAfterSampling, samplingPeriod,discreteTime):
     summation = 0
