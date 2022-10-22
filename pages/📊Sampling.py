@@ -1,6 +1,5 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-from scipy import signal
 from scipy.interpolate import interp1d
 import numpy as np  # np mean, np random ,np asarray, np 
 
@@ -65,4 +64,4 @@ if option:
     # st.write(signalAfterReconstruction)
 
 else:
-    st.write('Generate signals then choose a one to sample')
+    st.write('Generate signals then choose one to sample')
