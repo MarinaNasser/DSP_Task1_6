@@ -9,3 +9,4 @@ In this studio you can:
   5. Save your signal in an csv file
   6. Finally you can do all on an uploaded signal of your choice.
 
+![Markdown logo]("D:\3rd year\DSP\Tasks\Task 1\DSP_Task1_6\SNR rule.png")
