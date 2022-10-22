@@ -7,10 +7,10 @@ col1, col2, col3 = st.columns(3)
 with col2:
     st.title('Sampling')
 
-def getYCoordinate(newTimeAxisPoint, signalAfterSampling, samplingPeriod,discreteTime):
+def getYCoordinate(newPoint, signalAfterSampling, samplingPeriod,discreteTime):
     summation = 0
-    for x,y in zip(discreteTime, signalAfterSampling):
-        summation = summation + y * np.sinc((1 / samplingPeriod) * (newTimeAxisPoint - x ))
+    for discreteTimePoint,correspondingSignalValue in zip(discreteTime, signalAfterSampling):
+        summation = summation + correspondingSignalValue * np.sinc((1 / samplingPeriod) * (newPoint - discreteTimePoint ))
     return summation
 
 
@@ -44,8 +44,14 @@ if option:
     samplingFrequency = st.sidebar.slider('Sampling frequency', 1, 100, 2)
     print(samplingFrequency)
     samplingPeriod = 1 / samplingFrequency
-    discreteTimeUnNormalised = np.arange(analogSignal_time[0]/samplingPeriod, analogSignal_time[-1] / samplingPeriod)
-    discreteTime = discreteTimeUnNormalised * samplingPeriod
+    
+    #the equivalent to line 53
+    # discreteTimeUnNormalised = np.arange(analogSignal_time[0]/samplingPeriod, analogSignal_time[-1] / samplingPeriod)
+    # discreteTime = discreteTimeUnNormalised * samplingPeriod
+    
+    #the equivalent to the lines 49 and 50
+    discreteTime = np.arange(analogSignal_time[0],analogSignal_time[-1],samplingPeriod)
+    
     
     predict = interp1d(analogSignal_time, analogSignalValue, kind='quadratic')
     signalAfterSampling = np.array([predict(timePoint) for timePoint in discreteTime])
@@ -53,6 +59,7 @@ if option:
     interpolatedSignalFigure, interpolatedSignalAxis = plt.subplots(1, 1)
 
     reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 200,endpoint=False)
+    #line 63 takes high processing time than 61 because it includes much more points to process
     # reconstructionTimeAxis = analogSignal_time
 
     signalAfterReconstruction = np.array([getYCoordinate(timePoint, signalAfterSampling, samplingPeriod,discreteTime) for timePoint in reconstructionTimeAxis])

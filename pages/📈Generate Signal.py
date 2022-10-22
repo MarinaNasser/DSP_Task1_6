@@ -157,8 +157,10 @@ if st.button('Save as CSV 📩'):
         st.warning('Check the required signal', icon="⚠️")
     else:
         for checkBoxIndex in chosenCheckBoxes:
-            data = st.session_state['signal'][checkBoxIndex][1]
+            data = {'t':st.session_state['signal'][checkBoxIndex][0],
+                    'signal':st.session_state['signal'][checkBoxIndex][1]}
             df = pd.DataFrame(data)
-            df.to_csv('Signal {}.csv'.format(index))
+            df.set_index('t', inplace=True)
+            df.to_csv('Signal {}.csv'.format(checkBoxIndex))
             st.success("The file has been saved successfully", icon="✅")
 
