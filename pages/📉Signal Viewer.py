@@ -34,5 +34,5 @@ if uploaded_file is not None:
     st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
     st.session_state['signal'][st.session_state['primaryKey']] = [analogSignalTime,analogSignalValue]
     st.session_state['uploaded'][st.session_state['primaryKey']] = True
-    st.plotly_chart(fig)
+    st.plotly_chart(fig,use_container_width=True)
 

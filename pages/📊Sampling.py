@@ -1,3 +1,4 @@
+from cProfile import label
 import streamlit as st
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
@@ -64,12 +65,13 @@ if option:
 
     signalAfterReconstruction = np.array([getYCoordinate(timePoint, signalAfterSampling, samplingPeriod,discreteTime) for timePoint in reconstructionTimeAxis])
     selectedOptionAxis.plot(discreteTime, signalAfterSampling,'r.',reconstructionTimeAxis, signalAfterReconstruction, 'y--')
-    st.plotly_chart(selectedOptionFigure)
+    
+    st.plotly_chart(selectedOptionFigure,use_container_width=True)
     
 
     interpolatedSignalAxis.plot(reconstructionTimeAxis, signalAfterReconstruction, '-')
 
-    st.plotly_chart(interpolatedSignalFigure)
+    st.plotly_chart(interpolatedSignalFigure,use_container_width=True)
     # st.write(signalAfterReconstruction)
 
 else:

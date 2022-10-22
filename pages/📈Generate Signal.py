@@ -94,7 +94,7 @@ st.sidebar.text('check the signal first')
 changeableSignalFigure, changeableSignalAxis = plt.subplots(1, 1)
 changeableSignalAxis.plot(analogSignal_time, changeableSignal,  color=color, linewidth=3)
 changeableSignalAxis.grid()
-st.plotly_chart(changeableSignalFigure,  linewidth=3)
+st.plotly_chart(changeableSignalFigure,  linewidth=3,use_container_width=True)
 
 
 
@@ -146,7 +146,7 @@ for index, sgnal in st.session_state['signal'].items():
         signalFigure, signalAxis = plt.subplots(1, 1)
         signalAxis.plot(sgnal[0], sgnal[1], linewidth=3)
         signalAxis.grid()
-        st.plotly_chart(signalFigure, linewidth=3)
+        st.plotly_chart(signalFigure, linewidth=3,use_container_width=True)
 
 #--------------------------------------------------------------------
 #save file
