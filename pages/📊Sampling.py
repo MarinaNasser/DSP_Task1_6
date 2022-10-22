@@ -1,9 +1,11 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-from scipy import signal
 from scipy.interpolate import interp1d
 import numpy as np  # np mean, np random ,np asarray, np 
-import pandas as pd
+
+col1, col2, col3 = st.columns(3)
+with col2:
+    st.title('Sampling')
 
 def getYCoordinate(newTimeAxisPoint, signalAfterSampling, samplingPeriod,discreteTime):
     summation = 0
@@ -65,4 +67,4 @@ if option:
     # st.write(signalAfterReconstruction)
 
 else:
-    st.write('Generate signals then choose a one to sample')
+    st.write('Generate signals then choose one to sample')
