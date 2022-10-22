@@ -40,7 +40,7 @@ if option:
     selectedOptionAxis.grid()
     # st.plotly_chart(selectedOptionFigure)
 
-    samplingFrequency = st.sidebar.slider('Sampling frequency', 1, 500, 2)
+    samplingFrequency = st.sidebar.slider('Sampling frequency', 1, 100, 2)
     print(samplingFrequency)
     samplingPeriod = 1 / samplingFrequency
     discreteTimeUnNormalised = np.arange(analogSignal_time[0]/samplingPeriod, analogSignal_time[-1] / samplingPeriod)
@@ -51,8 +51,8 @@ if option:
 
     interpolatedSignalFigure, interpolatedSignalAxis = plt.subplots(1, 1)
 
-    reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 200,endpoint=False)
-    # reconstructionTimeAxis = analogSignal_time
+    # reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 200,endpoint=False)
+    reconstructionTimeAxis = analogSignal_time
 
     signalAfterReconstruction = np.array([getYCoordinate(timePoint, signalAfterSampling, samplingPeriod,discreteTime) for timePoint in reconstructionTimeAxis])
     selectedOptionAxis.plot(discreteTime, signalAfterSampling,'r.',reconstructionTimeAxis, signalAfterReconstruction, 'y--')
