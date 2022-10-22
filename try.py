@@ -53,8 +53,3 @@ plt.scatter(ts,x1resampled)
 plt.subplot(3,1,3)
 plt.plot(t,x1reconstructed)
 plt.show()
-
-
-
-#noise=0.0002*np.asarray(random.sample(range(0,3000),3000))
-# interpolatedSignalAxis.plot(discreteTime, signalAfterSampling, 'ro-', reconstructionTimeAxis, signalAfterReconstruction, '.-')

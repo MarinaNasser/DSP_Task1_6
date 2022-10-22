@@ -11,7 +11,6 @@ def getYCoordinate(newTimeAxisPoint, signalAfterSampling, samplingPeriod,discret
     summation = 0
     for x,y in zip(discreteTime, signalAfterSampling):
         summation = summation + y * np.sinc((1 / samplingPeriod) * (newTimeAxisPoint - x ))
-    print(summation)
     return summation
 
 
@@ -53,8 +52,8 @@ if option:
 
     interpolatedSignalFigure, interpolatedSignalAxis = plt.subplots(1, 1)
 
-    # reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 200,endpoint=False)
-    reconstructionTimeAxis = analogSignal_time
+    reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 200,endpoint=False)
+    # reconstructionTimeAxis = analogSignal_time
 
     signalAfterReconstruction = np.array([getYCoordinate(timePoint, signalAfterSampling, samplingPeriod,discreteTime) for timePoint in reconstructionTimeAxis])
     selectedOptionAxis.plot(discreteTime, signalAfterSampling,'r.',reconstructionTimeAxis, signalAfterReconstruction, 'y--')
