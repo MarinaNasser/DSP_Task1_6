@@ -4,6 +4,8 @@ import streamlit as st # data web app development
 st.set_page_config(
     page_title="DSP TASK 1",
     page_icon="✅",
+    layout = "centered",
+    initial_sidebar_state="expanded"
 )
 
 col1, col2, col3 = st.columns(3)

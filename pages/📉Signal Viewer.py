@@ -7,9 +7,9 @@ import numpy as np
 import pandas as pd
 from matplotlib.animation import FuncAnimation 
 
+st.title('Signal Viewer')
 
-
-uploaded_file = st.file_uploader("Choose a CSV file")
+uploaded_file = st.file_uploader("Choose a CSV file 📂 ")
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
