@@ -97,15 +97,22 @@ noise_watts = 10 ** (noise_db / 10)  # converts noise from db to watts
 mean_noise = 0
 noise = np.random.normal(mean_noise, np.sqrt(noise_watts), len(changeableSignal))
 
+agree = st.checkbox('Noise')
+
+if agree:
+    st.session_state['noise'] = True
+else:
+    st.session_state['noise'] = False
 
 
-if st.sidebar.button('Noise'):
-    if st.session_state['button_state']==True:
-        st.session_state['noise'] = True
-        st.session_state['button_state']=False
-    else:
-        st.session_state['noise'] = False
-        st.session_state['button_state']=True
+## change state every click
+# if st.sidebar.button('Noise'):
+#     if st.session_state['button_state']==True:
+#         st.session_state['noise'] = True
+#         st.session_state['button_state']=False
+#     else:
+#         st.session_state['noise'] = False
+#         st.session_state['button_state']=True
 
 # if st.sidebar.button('➖Delete noise'):
 #     st.session_state['noise'] = False
