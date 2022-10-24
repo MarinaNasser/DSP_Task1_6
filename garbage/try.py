@@ -53,3 +53,24 @@ plt.scatter(ts,x1resampled)
 plt.subplot(3,1,3)
 plt.plot(t,x1reconstructed)
 plt.show()
+
+# viewing the generated signals
+# for index, sgnal in st.session_state['signal'].items():
+#     if st.session_state['checkBoxes'][index]:
+#         st.write('Signal {}'.format(index))
+#         signalFigure, signalAxis = plt.subplots(1, 1)
+#         signalAxis.plot(sgnal[0], sgnal[1], linewidth=3)
+#         signalAxis.grid()
+#         st.plotly_chart(signalFigure, linewidth=3,use_container_width=True)
+
+## change state every click
+# if st.sidebar.button('Noise'):
+#     if st.session_state['button_state']==True:
+#         st.session_state['noise'] = True
+#         st.session_state['button_state']=False
+#     else:
+#         st.session_state['noise'] = False
+#         st.session_state['button_state']=True
+
+# if st.sidebar.button('➖Delete noise'):
+#     st.session_state['noise'] = False
