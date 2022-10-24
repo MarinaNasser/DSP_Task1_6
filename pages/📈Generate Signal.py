@@ -122,15 +122,26 @@ with c2:
 amplitude = st.sidebar.slider('Amplitude', 1, 10, 1)
 frequency = st.sidebar.slider('Frequency (Hz)', 1, 20, 1)
 samplingFrequency = st.sidebar.slider('Sampling frequency (Hz)', 1, 100, 2)
-snr_db = st.sidebar.slider('SNR (dB)', 1.0, 50.0, 1.0)  # units
-#--------------------------------------------------------------------
+
+# if st.session_state['noise']:
+# snr_db = st.sidebar.slider('SNR (dB)', 1, 50, 1)  # units
+
+#------------------------------------------------------------------------------------------------------------------------------------
 
 analogSignal_time = np.linspace(0, 5, 3000) #x-axis
 
 changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time) #y-axis
 
-#-----------------------------------------------------------measuring noise----------------------------------------------------------------
+#-------------------------------------------------------------------noise check box----------------------------------------------------
+snr_db = 50
+agree = st.sidebar.checkbox('Noise')
+if agree:
+    st.session_state['noise'] = True
+    snr_db = st.sidebar.slider('SNR (dB)', 1, 50, 1)  # units
+else:
+    st.session_state['noise'] = False
 
+#-----------------------------------------------------------measuring noise----------------------------------------------------------------
 # signal-to-noise ratio is defined as the ratio of the power of the signal to the power of the noise
 signal_power = changeableSignal ** 2 # calculate signal power
 signal_power_db = 10 * np.log10(signal_power) # convert signal power to db
@@ -142,15 +153,7 @@ noise_watts = 10 ** (noise_db / 10)  # converts noise from db to watts
 mean_noise = 0
 noise = np.random.normal(mean_noise, np.sqrt(noise_watts), len(changeableSignal))
 
-agree = st.sidebar.checkbox('Noise')
-
-if agree:
-    st.session_state['noise'] = True
-else:
-    st.session_state['noise'] = False
-
-
-# add noise or do not
+#------------------------------------------------------------ add noise or do not---------------------------------------------------
 if st.session_state['noise']:
     changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time) + noise
 else:
@@ -196,8 +199,7 @@ with c1:
     sample(st.session_state['sum'][0],st.session_state['sum'][1],original_signal,sampling_point,reconstructed_signal,samplingFrequency)
 
 with c2:
-    
-# expander for the generated signals checkboxes
+    # expander for the generated signals checkboxes
     expander = st.expander('Generated signals')
     for index, sgnal in st.session_state['signal'].items():
         if st.session_state['uploaded'][index]:
