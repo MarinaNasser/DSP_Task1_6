@@ -10,7 +10,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-c1, c2, c3 = st.columns((5, 1,1))
+c1, c2 = st.columns((4, 2),gap="small")
 
 
 # st.title('Customise your signal')
@@ -39,7 +39,7 @@ if 'button_state' not in st.session_state:
     
 #--------------------------------------------------------------------
  
-with c1:
+with c2:
     uploaded_file = st.file_uploader("Choose a CSV file 📂 ")
 
 
@@ -161,8 +161,12 @@ with c1:
     changeableSignalAxis.grid()
     st.plotly_chart(changeableSignalFigure,  linewidth=3)
 
+with c2:
+    original_signal=st.checkbox('Original signal')
+    reconstructed_signal=st.checkbox('Reconstructed signal')
+    sampling_point=st.checkbox('Sampling Points')
 
-with c3:
+with c2:
     
 # expander for the generated signals checkboxes
     expander = st.expander('Generated signals')
@@ -183,10 +187,6 @@ with c3:
 #         st.plotly_chart(signalFigure, linewidth=3,use_container_width=True)
 
 
-with c2:
-    original_signal=st.checkbox('Original signal')
-    reconstructed_signal=st.checkbox('Reconstructed signal')
-    sampling_point=st.checkbox('Sampling Points')
 
 #--------------------------------------------------------------------
 #save file
