@@ -33,7 +33,7 @@ if option:
     selectedOptionAxis.grid()
     # st.plotly_chart(selectedOptionFigure)
 
-    samplingFrequency = st.sidebar.slider('Sampling frequency', 1, 100, 2)
+    samplingFrequency = st.sidebar.slider('Sampling frequency (Hz)', 1, 100, 2)
     print(samplingFrequency)
     samplingPeriod = 1 / samplingFrequency
     
