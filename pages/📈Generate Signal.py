@@ -54,7 +54,9 @@ def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBo
     analogSignal_time = signalX
     analogSignalValue = signalY
     selectedOptionAxis.grid()
-    
+    font1 = {'family':'serif','color':'white','size':20}
+    plt.xlabel("Time (seconds)",fontdict = font1)
+    plt.ylabel("Amplitude",fontdict = font1)
     # st.plotly_chart(selectedOptionFigure)
 
     print(samplingFrequency)
@@ -95,9 +97,13 @@ if uploaded_file is not None:
     list_of_columns=df.columns
     with c1:
         fig, ax = plt.subplots()
+        fig.set_size_inches(8, 3)
         df = df.drop_duplicates(keep = 'first',subset=[list_of_columns[0]])
         analogSignalTime = df[list_of_columns[0]].to_numpy()
         analogSignalValue = df[list_of_columns[1]].to_numpy()
+        font1 = {'family':'serif','color':'white','size':20}
+        plt.xlabel("Time (seconds)",fontdict = font1)
+        plt.ylabel("Amplitude",fontdict = font1)
         ax.plot(analogSignalTime,analogSignalValue)
     # st.write(type(analogSignalTime))
     # st.write(type(analogSignalValue))
