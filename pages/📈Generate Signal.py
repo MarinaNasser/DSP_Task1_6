@@ -97,7 +97,7 @@ noise_watts = 10 ** (noise_db / 10)  # converts noise from db to watts
 mean_noise = 0
 noise = np.random.normal(mean_noise, np.sqrt(noise_watts), len(changeableSignal))
 
-agree = st.checkbox('Noise')
+agree = st.sidebar.checkbox('Noise')
 
 if agree:
     st.session_state['noise'] = True
