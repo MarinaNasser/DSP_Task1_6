@@ -59,19 +59,21 @@ if option:
 
     interpolatedSignalFigure, interpolatedSignalAxis = plt.subplots(1, 1)
 
-    reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 200,endpoint=False)
+    # reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 200,endpoint=False)
     #line 63 takes high processing time than 61 because it includes much more points to process
-    # reconstructionTimeAxis = analogSignal_time
+    reconstructionTimeAxis = analogSignal_time
 
     signalAfterReconstruction = np.array([getYCoordinate(timePoint, signalAfterSampling, samplingPeriod,discreteTime) for timePoint in reconstructionTimeAxis])
     selectedOptionAxis.plot(discreteTime, signalAfterSampling,'r.',reconstructionTimeAxis, signalAfterReconstruction, 'y--')
     
-    st.plotly_chart(selectedOptionFigure,use_container_width=True)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.plotly_chart(selectedOptionFigure,use_container_width=True)
     
 
     interpolatedSignalAxis.plot(reconstructionTimeAxis, signalAfterReconstruction, '-')
-
-    st.plotly_chart(interpolatedSignalFigure,use_container_width=True)
+    with col2:
+        st.plotly_chart(interpolatedSignalFigure,use_container_width=True)
     # st.write(signalAfterReconstruction)
 
 else:
