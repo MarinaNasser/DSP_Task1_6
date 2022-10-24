@@ -38,14 +38,15 @@ if 'sum' not in st.session_state:
 if 'button_state' not in st.session_state:
     st.session_state['button_state']=True
     
-#--------------------------------------------------------------------
+#-----------------------------------------------------------sinc interpolation----------------------------------------------------------------
 def getYCoordinate(newPoint, signalAfterSampling, samplingPeriod,discreteTime):
     summation = 0
     for discreteTimePoint,correspondingSignalValue in zip(discreteTime, signalAfterSampling):
         summation = summation + correspondingSignalValue * np.sinc((1 / samplingPeriod) * (newPoint - discreteTimePoint ))
     return summation
 
-def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBox):
+#-----------------------------------------------------------sampling----------------------------------------------------------------
+def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBox,samplingFrequency):
     # get the index of the signal from the chosen string
 
     selectedOptionFigure, selectedOptionAxis = plt.subplots(1, 1)
@@ -55,7 +56,6 @@ def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBo
     
     # st.plotly_chart(selectedOptionFigure)
 
-    samplingFrequency = st.sidebar.slider('Sampling frequency (Hz)', 1, 100, 2)
     print(samplingFrequency)
     samplingPeriod = 1 / samplingFrequency
     
@@ -65,7 +65,7 @@ def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBo
     
     #the equivalent to the lines 49 and 50
     discreteTime = np.arange(analogSignal_time[0],analogSignal_time[-1],samplingPeriod)
-        
+    
     predict = interp1d(analogSignal_time, analogSignalValue, kind='quadratic')
     signalAfterSampling = np.array([predict(timePoint) for timePoint in discreteTime])
 
@@ -83,6 +83,7 @@ def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBo
     
     st.plotly_chart(selectedOptionFigure)
 
+#-----------------------------------------------------------uploading file----------------------------------------------------------------
 with c2:
     uploaded_file = st.file_uploader("Choose a CSV file 📂 ")
 
@@ -114,12 +115,13 @@ with c2:
 #--------------------------------------------------------------------
 
 
-
+#-----------------------------------------------------------sliders----------------------------------------------------------------
 #sliders
 with c2:
     color = st.color_picker('Pick the signal color', '#00f900')
 amplitude = st.sidebar.slider('Amplitude', 1, 10, 1)
 frequency = st.sidebar.slider('Frequency (Hz)', 1, 20, 1)
+samplingFrequency = st.sidebar.slider('Sampling frequency (Hz)', 1, 100, 2)
 snr_db = st.sidebar.slider('SNR (dB)', 1.0, 50.0, 1.0)  # units
 #--------------------------------------------------------------------
 
@@ -127,9 +129,7 @@ analogSignal_time = np.linspace(0, 5, 3000) #x-axis
 
 changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time) #y-axis
 
-#--------------------------------------------------------------------
-
-#measuring noise
+#-----------------------------------------------------------measuring noise----------------------------------------------------------------
 
 # signal-to-noise ratio is defined as the ratio of the power of the signal to the power of the noise
 signal_power = changeableSignal ** 2 # calculate signal power
@@ -193,12 +193,7 @@ with c2:
     sampling_point=st.checkbox('Sampling Points')
 
 with c1:
-    # showing the summation of signals
-    # changeableSignalFigure, changeableSignalAxis = plt.subplots(1, 1)
-    # changeableSignalAxis.plot(st.session_state['sum'][0], st.session_state['sum'][1],color=color, linewidth=3)
-    # changeableSignalAxis.grid()
-    # st.plotly_chart(changeableSignalFigure,  linewidth=3)
-    sample(st.session_state['sum'][0],st.session_state['sum'][1],original_signal,sampling_point,reconstructed_signal)
+    sample(st.session_state['sum'][0],st.session_state['sum'][1],original_signal,sampling_point,reconstructed_signal,samplingFrequency)
 
 with c2:
     
