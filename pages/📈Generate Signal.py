@@ -1,6 +1,6 @@
 import streamlit as st  # data web app development
 import matplotlib.pyplot as plt
-import numpy as np  # np mean, np random ,np asarray, np 
+import numpy as np  # np mean, np random ,np asarray
 import pandas as pd
 from scipy.interpolate import interp1d
 
@@ -88,139 +88,144 @@ with c2:
     uploaded_file = st.file_uploader("Choose a CSV file 📂 ")
 
 
-    if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
-        
-        list_of_columns=df.columns
-
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    
+    list_of_columns=df.columns
+    with c1:
         fig, ax = plt.subplots()
         df = df.drop_duplicates(keep = 'first',subset=[list_of_columns[0]])
         analogSignalTime = df[list_of_columns[0]].to_numpy()
         analogSignalValue = df[list_of_columns[1]].to_numpy()
         ax.plot(analogSignalTime,analogSignalValue)
-        # st.write(type(analogSignalTime))
-        # st.write(type(analogSignalValue))
-        
-        if 'primaryKey' not in st.session_state:
-            st.session_state['primaryKey'] = 0
-        if 'signal' not in st.session_state:
-            st.session_state['signal'] = {}
-        if 'uploaded' not in st.session_state:
-            st.session_state['uploaded'] = {}
-        
-        st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
-        st.session_state['signal'][st.session_state['primaryKey']] = [analogSignalTime,analogSignalValue]
-        st.session_state['uploaded'][st.session_state['primaryKey']] = True
-        st.plotly_chart(fig,use_container_width=True)
+    # st.write(type(analogSignalTime))
+    # st.write(type(analogSignalValue))
+    
+    if 'primaryKey' not in st.session_state:
+        st.session_state['primaryKey'] = 0
+    if 'signal' not in st.session_state:
+        st.session_state['signal'] = {}
+    if 'uploaded' not in st.session_state:
+        st.session_state['uploaded'] = {}
+    
+    st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
+    st.session_state['signal'][st.session_state['primaryKey']] = [analogSignalTime,analogSignalValue]
+    st.session_state['uploaded'][st.session_state['primaryKey']] = True
+    with c1:
+        st.plotly_chart(fig)
+    
 #--------------------------------------------------------------------
-
+with c2:
+    original_signal=st.checkbox('Original signal')
+    reconstructed_signal=st.checkbox('Reconstructed signal')
+    sampling_point=st.checkbox('Sampling Points')
 
 #-----------------------------------------------------------sliders----------------------------------------------------------------
 #sliders
 with c2:
     color = st.color_picker('Pick the signal color', '#00f900')
-amplitude = st.sidebar.slider('Amplitude', 1, 10, 1)
-frequency = st.sidebar.slider('Frequency (Hz)', 1, 20, 1)
+if uploaded_file is None:
+    amplitude = st.sidebar.slider('Amplitude', 1, 10, 1)
+    frequency = st.sidebar.slider('Frequency (Hz)', 1, 20, 1)
 samplingFrequency = st.sidebar.slider('Sampling frequency (Hz)', 1, 100, 2)
 
 # if st.session_state['noise']:
 # snr_db = st.sidebar.slider('SNR (dB)', 1, 50, 1)  # units
 
 #------------------------------------------------------------------------------------------------------------------------------------
+if uploaded_file is None:
+    analogSignal_time = np.linspace(0, 5, 3000) #x-axis
 
-analogSignal_time = np.linspace(0, 5, 3000) #x-axis
+    changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time) #y-axis
 
-changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time) #y-axis
+    #-------------------------------------------------------------------noise check box----------------------------------------------------
+    snr_db = 50
+    agree = st.sidebar.checkbox('Noise')
 
-#-------------------------------------------------------------------noise check box----------------------------------------------------
-snr_db = 50
-agree = st.sidebar.checkbox('Noise')
-if agree:
-    st.session_state['noise'] = True
-    snr_db = st.sidebar.slider('SNR (dB)', 1, 50, 1)  # units
-else:
-    st.session_state['noise'] = False
+    if agree:
+        st.session_state['noise'] = True
+        snr_db = st.sidebar.slider('SNR (dB)', 1, 50, 1)  # units
+        # signal-to-noise ratio is defined as the ratio of the power of the signal to the power of the noise
+        signal_power = changeableSignal ** 2 # calculate signal power
+        signal_power_db = 10 * np.log10(signal_power) # convert signal power to db
+        signal_average_power = np.mean(signal_power)  # calculate signal average power
+        signal_average_power_db = 10 * np.log10(signal_average_power)  # convert signal average power to db
+        noise_db = signal_average_power_db - snr_db  # calculate noise in db
+        noise_watts = 10 ** (noise_db / 10)  # converts noise from db to watts
+        # generate a sample of white noise
+        mean_noise = 0
+        noise = np.random.normal(mean_noise, np.sqrt(noise_watts), len(changeableSignal))
 
-#-----------------------------------------------------------measuring noise----------------------------------------------------------------
-# signal-to-noise ratio is defined as the ratio of the power of the signal to the power of the noise
-signal_power = changeableSignal ** 2 # calculate signal power
-signal_power_db = 10 * np.log10(signal_power) # convert signal power to db
-signal_average_power = np.mean(signal_power)  # calculate signal average power
-signal_average_power_db = 10 * np.log10(signal_average_power)  # convert signal average power to db
-noise_db = signal_average_power_db - snr_db  # calculate noise in db
-noise_watts = 10 ** (noise_db / 10)  # converts noise from db to watts
-# generate a sample of white noise
-mean_noise = 0
-noise = np.random.normal(mean_noise, np.sqrt(noise_watts), len(changeableSignal))
 
-#------------------------------------------------------------ add noise or do not---------------------------------------------------
-if st.session_state['noise']:
-    changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time) + noise
-else:
-    changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time)
+    else:
+        st.session_state['noise'] = False
+
+
+    #------------------------------------------------------------ add noise or do not---------------------------------------------------
+    if st.session_state['noise']:
+        changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time) + noise
+    else:
+        changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time)
+    
+
+
+    # addressing the selected checkboxes and the other ones
+    chosenCheckBoxes = []
+    leftCheckBoxes = []
+    for index, value in st.session_state['checkBoxes'].items():
+        if value:
+            chosenCheckBoxes.append(index)
+        else:
+            leftCheckBoxes.append(index)
+
+
+
+    # addition of more than one signal
+    if st.sidebar.button('✖️ Add Signal'):
+        st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
+        st.session_state['signal'][st.session_state['primaryKey']] = [analogSignal_time, changeableSignal]
+        st.session_state['uploaded'][st.session_state['primaryKey']] = False
+        st.session_state['sum'][1] = st.session_state['sum'][1] + st.session_state['signal'][st.session_state['primaryKey']][1]
+
+
+
+
+    # deleting the selected signals from the checkboxes and from the st.session_state['signal']
+    if st.sidebar.button('➖Delete Signal'):
+        for index in chosenCheckBoxes:
+            st.session_state['checkBoxes'].pop(index)
+            st.session_state['sum'][1] -= st.session_state['signal'][index][1]
+            st.session_state['signal'].pop(index)
+
+
    
 
+    with c1:
+        sample(st.session_state['sum'][0],st.session_state['sum'][1],original_signal,sampling_point,reconstructed_signal,samplingFrequency)
 
-# addressing the selected checkboxes and the other ones
-chosenCheckBoxes = []
-leftCheckBoxes = []
-for index, value in st.session_state['checkBoxes'].items():
-    if value:
-        chosenCheckBoxes.append(index)
-    else:
-        leftCheckBoxes.append(index)
-
-
-
-# addition of more than one signal
-if st.sidebar.button('✖️ Add Signal'):
-    st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
-    st.session_state['signal'][st.session_state['primaryKey']] = [analogSignal_time, changeableSignal]
-    st.session_state['uploaded'][st.session_state['primaryKey']] = False
-    st.session_state['sum'][1] = st.session_state['sum'][1] + st.session_state['signal'][st.session_state['primaryKey']][1]
+    with c2:
+        # expander for the generated signals checkboxes
+        expander = st.expander('Generated signals')
+        for index, sgnal in st.session_state['signal'].items():
+            if st.session_state['uploaded'][index]:
+                st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index),disabled = True)
+                continue
+            st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index))
 
 
-
-
-# deleting the selected signals from the checkboxes and from the st.session_state['signal']
-if st.sidebar.button('➖Delete Signal'):
-    for index in chosenCheckBoxes:
-        st.session_state['checkBoxes'].pop(index)
-        st.session_state['sum'][1] -= st.session_state['signal'][index][1]
-        st.session_state['signal'].pop(index)
-
-
-with c2:
-    original_signal=st.checkbox('Original signal')
-    reconstructed_signal=st.checkbox('Reconstructed signal')
-    sampling_point=st.checkbox('Sampling Points')
-
-with c1:
-    sample(st.session_state['sum'][0],st.session_state['sum'][1],original_signal,sampling_point,reconstructed_signal,samplingFrequency)
-
-with c2:
-    # expander for the generated signals checkboxes
-    expander = st.expander('Generated signals')
-    for index, sgnal in st.session_state['signal'].items():
-        if st.session_state['uploaded'][index]:
-            st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index),disabled = True)
-            continue
-        st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index))
-
-
-#--------------------------------------------------------------------
-#save file
-if st.button('Save as CSV 📩'):
-    if len(st.session_state['signal'] )==0:
-      st.warning('No signal is generated', icon="⚠️")
-    elif len(chosenCheckBoxes)==0:
-        st.warning('Check the required signal', icon="⚠️")
-    else:
-        for checkBoxIndex in chosenCheckBoxes:
-            data = {'t':st.session_state['signal'][checkBoxIndex][0],
-                    'signal':st.session_state['signal'][checkBoxIndex][1]}
-            df = pd.DataFrame(data)
-            df.set_index('t', inplace=True)
-            df.to_csv('Signal {}.csv'.format(checkBoxIndex))
-            st.success("The file has been saved successfully", icon="✅")
+    #--------------------------------------------------------------------
+    #save file
+    if st.button('Save as CSV 📩'):
+        if len(st.session_state['signal'] )==0:
+            st.warning('No signal is generated', icon="⚠️")
+        elif len(chosenCheckBoxes)==0:
+            st.warning('Check the required signal', icon="⚠️")
+        else:
+            for checkBoxIndex in chosenCheckBoxes:
+                data = {'t':st.session_state['signal'][checkBoxIndex][0],
+                        'signal':st.session_state['signal'][checkBoxIndex][1]}
+                df = pd.DataFrame(data)
+                df.set_index('t', inplace=True)
+                df.to_csv('Signal {}.csv'.format(checkBoxIndex))
+                st.success("The file has been saved successfully", icon="✅")
 
