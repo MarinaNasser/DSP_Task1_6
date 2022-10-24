@@ -1,12 +1,10 @@
-from sqlalchemy import true
 import streamlit as st  # data web app development
 import matplotlib.pyplot as plt
 import numpy as np  # np mean, np random ,np asarray, np 
 import pandas as pd
 
-col1, col2, col3 = st.columns(3)
-with col2:
-    st.title('Customise your signal')
+
+st.title('Customise your signal')
 
 
 if 'noise' not in st.session_state:
@@ -92,17 +90,21 @@ st.sidebar.text('check the signal first')
 
 # showing the signal according to the changes of the sidebar sliders
 changeableSignalFigure, changeableSignalAxis = plt.subplots(1, 1)
-changeableSignalAxis.plot(analogSignal_time, changeableSignal,  color=color, linewidth=3)
+changeableSignalAxis.plot(analogSignal_time, changeableSignal,color=color, linewidth=3)
 changeableSignalAxis.grid()
-st.plotly_chart(changeableSignalFigure,  linewidth=3,use_container_width=True)
+st.plotly_chart(changeableSignalFigure,  linewidth=3)
 
 
+# chart_data = pd.DataFrame(
+#     analogSignal_time,
+#     changeableSignal)
+# st.area_chart(chart_data)
 
 
 
 
 # addition of more than one signal
-if st.sidebar.button('✖️Add Signals'):
+if st.sidebar.button('✖️ Add Signal'):
     summedSignal = np.zeros(3000)
     atLeastOneChecked = False
 
