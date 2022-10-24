@@ -1,4 +1,3 @@
-from cProfile import label
 import streamlit as st
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
