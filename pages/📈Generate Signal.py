@@ -72,7 +72,7 @@ with c1:
 
 
 #sliders
-color = st.sidebar.color_picker('Pick the signal color', '#00f900')
+color = st.color_picker('Pick the signal color', '#00f900')
 amplitude = st.sidebar.slider('Amplitude', 1, 10, 1)
 frequency = st.sidebar.slider('Frequency (Hz)', 1, 20, 1)
 snr_db = st.sidebar.slider('SNR (dB)', 1.0, 50.0, 1.0)  # units
@@ -99,13 +99,21 @@ noise = np.random.normal(mean_noise, np.sqrt(noise_watts), len(changeableSignal)
 
 
 
-if st.sidebar.button('Noise'):
-    if st.session_state['button_state']==True:
-        st.session_state['noise'] = True
-        st.session_state['button_state']=False
-    else:
-        st.session_state['noise'] = False
-        st.session_state['button_state']=True
+agree = st.sidebar.checkbox('Noise')
+
+if agree:
+    st.session_state['noise'] = True
+else :
+    st.session_state['noise'] = False
+
+#change state every click  
+# if st.sidebar.button('Noise'):
+#     if st.session_state['button_state']==True:
+#         st.session_state['noise'] = True
+#         st.session_state['button_state']=False
+#     else:
+#         st.session_state['noise'] = False
+#         st.session_state['button_state']=True
 
 # if st.sidebar.button('➖Delete noise'):
 #     st.session_state['noise'] = False
@@ -118,6 +126,7 @@ else:
    
 
 
+
 # addressing the selected checkboxes and the other ones
 chosenCheckBoxes = []
 leftCheckBoxes = []
@@ -126,6 +135,7 @@ for index, value in st.session_state['checkBoxes'].items():
         chosenCheckBoxes.append(index)
     else:
         leftCheckBoxes.append(index)
+
 
 
 
