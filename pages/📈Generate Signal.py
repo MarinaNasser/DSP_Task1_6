@@ -10,7 +10,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-c1, c2 = st.columns((5, 1))
+c1, c2, c3 = st.columns((5, 1,1))
 
 
 # st.title('Customise your signal')
@@ -37,7 +37,7 @@ if 'sum' not in st.session_state:
 if 'button_state' not in st.session_state:
     st.session_state['button_state']=True
     
-
+#--------------------------------------------------------------------
  
 with c1:
     uploaded_file = st.file_uploader("Choose a CSV file 📂 ")
@@ -67,12 +67,13 @@ with c1:
         st.session_state['signal'][st.session_state['primaryKey']] = [analogSignalTime,analogSignalValue]
         st.session_state['uploaded'][st.session_state['primaryKey']] = True
         st.plotly_chart(fig,use_container_width=True)
-
+#--------------------------------------------------------------------
 
 
 
 #sliders
-color = st.sidebar.color_picker('Pick the signal color', '#00f900')
+with c2:
+    color = st.color_picker('Pick the signal color', '#00f900')
 amplitude = st.sidebar.slider('Amplitude', 1, 10, 1)
 frequency = st.sidebar.slider('Frequency (Hz)', 1, 20, 1)
 snr_db = st.sidebar.slider('SNR (dB)', 1.0, 50.0, 1.0)  # units
@@ -153,17 +154,23 @@ if st.sidebar.button('➖Delete Signal'):
         st.session_state['sum'][1] -= st.session_state['signal'][index][1]
         st.session_state['signal'].pop(index)
 
+with c1:
+    # showing the signal according to the changes of the sidebar sliders
+    changeableSignalFigure, changeableSignalAxis = plt.subplots(1, 1)
+    changeableSignalAxis.plot(st.session_state['sum'][0], st.session_state['sum'][1],color=color, linewidth=3)
+    changeableSignalAxis.grid()
+    st.plotly_chart(changeableSignalFigure,  linewidth=3)
 
 
-
-
+with c3:
+    
 # expander for the generated signals checkboxes
-expander = st.expander('Generated signals')
-for index, sgnal in st.session_state['signal'].items():
-    if st.session_state['uploaded'][index]:
-        st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index),disabled = True)
-        continue
-    st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index))
+    expander = st.expander('Generated signals')
+    for index, sgnal in st.session_state['signal'].items():
+        if st.session_state['uploaded'][index]:
+            st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index),disabled = True)
+            continue
+        st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index))
 
 
 # viewing the generated signals
@@ -176,13 +183,10 @@ for index, sgnal in st.session_state['signal'].items():
 #         st.plotly_chart(signalFigure, linewidth=3,use_container_width=True)
 
 
-# showing the signal according to the changes of the sidebar sliders
-changeableSignalFigure, changeableSignalAxis = plt.subplots(1, 1)
-changeableSignalAxis.plot(st.session_state['sum'][0], st.session_state['sum'][1],color=color, linewidth=3)
-changeableSignalAxis.grid()
-st.plotly_chart(changeableSignalFigure,  linewidth=3)
-
-
+with c2:
+    original_signal=st.checkbox('Original signal')
+    reconstructed_signal=st.checkbox('Reconstructed signal')
+    sampling_point=st.checkbox('Sampling Points')
 
 #--------------------------------------------------------------------
 #save file
