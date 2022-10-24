@@ -175,7 +175,7 @@ changeableSignalAxis.plot(st.session_state['sum'][0], st.session_state['sum'][1]
 changeableSignalAxis.grid()
 st.plotly_chart(changeableSignalFigure,  linewidth=3)
 
-
+sample(st.session_state['sum'])
 #--------------------------------------------------------------------
 #save file
 if st.button('Save as CSV 📩'):
