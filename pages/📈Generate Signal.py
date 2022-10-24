@@ -122,7 +122,7 @@ with c2:
 amplitude = st.sidebar.slider('Amplitude', 1, 10, 1)
 frequency = st.sidebar.slider('Frequency (Hz)', 1, 20, 1)
 samplingFrequency = st.sidebar.slider('Sampling frequency (Hz)', 1, 100, 2)
-snr_db = st.sidebar.slider('SNR (dB)', 1.0, 50.0, 1.0)  # units
+
 #--------------------------------------------------------------------
 
 analogSignal_time = np.linspace(0, 5, 3000) #x-axis
@@ -130,22 +130,23 @@ analogSignal_time = np.linspace(0, 5, 3000) #x-axis
 changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time) #y-axis
 
 #-----------------------------------------------------------measuring noise----------------------------------------------------------------
-
-# signal-to-noise ratio is defined as the ratio of the power of the signal to the power of the noise
-signal_power = changeableSignal ** 2 # calculate signal power
-signal_power_db = 10 * np.log10(signal_power) # convert signal power to db
-signal_average_power = np.mean(signal_power)  # calculate signal average power
-signal_average_power_db = 10 * np.log10(signal_average_power)  # convert signal average power to db
-noise_db = signal_average_power_db - snr_db  # calculate noise in db
-noise_watts = 10 ** (noise_db / 10)  # converts noise from db to watts
-# generate a sample of white noise
-mean_noise = 0
-noise = np.random.normal(mean_noise, np.sqrt(noise_watts), len(changeableSignal))
-
 agree = st.sidebar.checkbox('Noise')
 
-if agree:
+if agree==True:
     st.session_state['noise'] = True
+    snr_db = st.sidebar.slider('SNR (dB)', 1.0, 50.0, 1.0)  # units
+    
+    # signal-to-noise ratio is defined as the ratio of the power of the signal to the power of the noise
+    signal_power = changeableSignal ** 2 # calculate signal power
+    signal_power_db = 10 * np.log10(signal_power) # convert signal power to db
+    signal_average_power = np.mean(signal_power)  # calculate signal average power
+    signal_average_power_db = 10 * np.log10(signal_average_power)  # convert signal average power to db
+    noise_db = signal_average_power_db - snr_db  # calculate noise in db
+    noise_watts = 10 ** (noise_db / 10)  # converts noise from db to watts
+    # generate a sample of white noise
+    mean_noise = 0
+    noise = np.random.normal(mean_noise, np.sqrt(noise_watts), len(changeableSignal))
+
 else:
     st.session_state['noise'] = False
 
