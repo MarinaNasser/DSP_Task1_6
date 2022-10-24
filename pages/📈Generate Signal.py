@@ -34,8 +34,11 @@ if 'uploaded' not in st.session_state:
 if 'sum' not in st.session_state:
     st.session_state['sum'] = [np.linspace(0, 5, 3000),np.zeros(3000)]
 
+if 'button_state' not in st.session_state:
+    st.session_state['button_state']=True
+    
 
-
+ 
 with c1:
     uploaded_file = st.file_uploader("Choose a CSV file 📂 ")
 
@@ -96,11 +99,16 @@ noise = np.random.normal(mean_noise, np.sqrt(noise_watts), len(changeableSignal)
 
 
 
-if st.sidebar.button('✖️Add noise'):
-    st.session_state['noise'] = True
+if st.sidebar.button('Noise'):
+    if st.session_state['button_state']==True:
+        st.session_state['noise'] = True
+        st.session_state['button_state']=False
+    else:
+        st.session_state['noise'] = False
+        st.session_state['button_state']=True
 
-if st.sidebar.button('➖Delete noise'):
-    st.session_state['noise'] = False
+# if st.sidebar.button('➖Delete noise'):
+#     st.session_state['noise'] = False
 
 # add noise or do not
 if st.session_state['noise']:
