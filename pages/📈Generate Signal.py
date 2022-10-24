@@ -31,6 +31,9 @@ if 'signal' not in st.session_state:
 if 'uploaded' not in st.session_state:
     st.session_state['uploaded'] = {}
 
+if 'sum' not in st.session_state:
+    st.session_state['sum'] = [np.linspace(0, 5, 3000),np.zeros(3000)]
+
 
 
 with c1:
@@ -109,11 +112,11 @@ else:
 #--------------------------------------------------------------------
 
 
-# generate button
-if st.sidebar.button('Generate Signal ◀'):
-    st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
-    st.session_state['signal'][st.session_state['primaryKey']] = [analogSignal_time, changeableSignal]
-    st.session_state['uploaded'][st.session_state['primaryKey']] = False;
+# # generate button
+# if st.sidebar.button('Generate Signal ◀'):
+#     st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
+#     st.session_state['signal'][st.session_state['primaryKey']] = [analogSignal_time, changeableSignal]
+#     st.session_state['uploaded'][st.session_state['primaryKey']] = False;
     
 
 
@@ -146,19 +149,19 @@ st.plotly_chart(changeableSignalFigure,  linewidth=3)
 
 # addition of more than one signal
 if st.sidebar.button('✖️ Add Signal'):
-    summedSignal = np.zeros(3000)
-    atLeastOneChecked = False
+    # summedSignal = np.zeros(3000)
+    # atLeastOneChecked = False
 
-    for checkBoxIndex in chosenCheckBoxes:
-        atLeastOneChecked = True
-        summedSignal = summedSignal + st.session_state['signal'][checkBoxIndex][1]
+    # for checkBoxIndex in chosenCheckBoxes:
+        # atLeastOneChecked = True
+        # summedSignal = summedSignal + st.session_state['signal'][checkBoxIndex][1]
 
     # if there is anything to plot
-    if atLeastOneChecked:
-        st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
-        st.session_state['signal'][st.session_state['primaryKey']] = [analogSignal_time, summedSignal]
-        st.session_state['uploaded'][st.session_state['primaryKey']] = False
-
+    # if atLeastOneChecked:
+    st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
+    st.session_state['signal'][st.session_state['primaryKey']] = [analogSignal_time, changeableSignal]
+    st.session_state['uploaded'][st.session_state['primaryKey']] = False
+    st.session_state['sum'][1] = st.session_state['sum'][1] + st.session_state['signal'][st.session_state['primaryKey']][1]
 
 
 
