@@ -107,17 +107,7 @@ if st.session_state['noise']:
     changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time) + noise
 else:
     changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time)
-
-
-#--------------------------------------------------------------------
-
-
-# # generate button
-# if st.sidebar.button('Generate Signal ◀'):
-#     st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
-#     st.session_state['signal'][st.session_state['primaryKey']] = [analogSignal_time, changeableSignal]
-#     st.session_state['uploaded'][st.session_state['primaryKey']] = False;
-    
+   
 
 
 # addressing the selected checkboxes and the other ones
@@ -131,33 +121,8 @@ for index, value in st.session_state['checkBoxes'].items():
 
 
 
-
-# showing the signal according to the changes of the sidebar sliders
-changeableSignalFigure, changeableSignalAxis = plt.subplots(1, 1)
-changeableSignalAxis.plot(analogSignal_time, changeableSignal,color=color, linewidth=3)
-changeableSignalAxis.grid()
-st.plotly_chart(changeableSignalFigure,  linewidth=3)
-
-
-# chart_data = pd.DataFrame(
-#     analogSignal_time,
-#     changeableSignal)
-# st.area_chart(chart_data)
-
-
-
-
 # addition of more than one signal
 if st.sidebar.button('✖️ Add Signal'):
-    # summedSignal = np.zeros(3000)
-    # atLeastOneChecked = False
-
-    # for checkBoxIndex in chosenCheckBoxes:
-        # atLeastOneChecked = True
-        # summedSignal = summedSignal + st.session_state['signal'][checkBoxIndex][1]
-
-    # if there is anything to plot
-    # if atLeastOneChecked:
     st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
     st.session_state['signal'][st.session_state['primaryKey']] = [analogSignal_time, changeableSignal]
     st.session_state['uploaded'][st.session_state['primaryKey']] = False
@@ -170,8 +135,8 @@ if st.sidebar.button('✖️ Add Signal'):
 if st.sidebar.button('➖Delete Signal'):
     for index in chosenCheckBoxes:
         st.session_state['checkBoxes'].pop(index)
+        st.session_state['sum'][1] -= st.session_state['signal'][index][1]
         st.session_state['signal'].pop(index)
-
 
 
 
@@ -185,14 +150,23 @@ for index, sgnal in st.session_state['signal'].items():
         continue
     st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index))
 
+
 # viewing the generated signals
-for index, sgnal in st.session_state['signal'].items():
-    if st.session_state['checkBoxes'][index]:
-        st.write('Signal {}'.format(index))
-        signalFigure, signalAxis = plt.subplots(1, 1)
-        signalAxis.plot(sgnal[0], sgnal[1], linewidth=3)
-        signalAxis.grid()
-        st.plotly_chart(signalFigure, linewidth=3,use_container_width=True)
+# for index, sgnal in st.session_state['signal'].items():
+#     if st.session_state['checkBoxes'][index]:
+#         st.write('Signal {}'.format(index))
+#         signalFigure, signalAxis = plt.subplots(1, 1)
+#         signalAxis.plot(sgnal[0], sgnal[1], linewidth=3)
+#         signalAxis.grid()
+#         st.plotly_chart(signalFigure, linewidth=3,use_container_width=True)
+
+
+# showing the signal according to the changes of the sidebar sliders
+changeableSignalFigure, changeableSignalAxis = plt.subplots(1, 1)
+changeableSignalAxis.plot(st.session_state['sum'][0], st.session_state['sum'][1],color=color, linewidth=3)
+changeableSignalAxis.grid()
+st.plotly_chart(changeableSignalFigure,  linewidth=3)
+
 
 #--------------------------------------------------------------------
 #save file
