@@ -13,7 +13,6 @@ st.set_page_config(
 
 c1, c2 = st.columns((5, 1))
 
-
 st.title('Customise your signal')
 
 
@@ -176,7 +175,6 @@ changeableSignalAxis.plot(st.session_state['sum'][0], st.session_state['sum'][1]
 changeableSignalAxis.grid()
 st.plotly_chart(changeableSignalFigure,  linewidth=3)
 
-sample(st.session_state['sum'])
 #--------------------------------------------------------------------
 #save file
 if st.button('Save as CSV 📩'):
