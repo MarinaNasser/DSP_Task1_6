@@ -1,3 +1,4 @@
+from pickle import TRUE
 import streamlit as st  # data web app development
 import matplotlib.pyplot as plt
 import numpy as np  # np mean, np random ,np asarray
@@ -81,7 +82,7 @@ def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBo
     if reconstructionCheckBox:
         selectedOptionAxis.plot(reconstructionTimeAxis, signalAfterReconstruction, 'y--')
     
-    st.plotly_chart(selectedOptionFigure)
+    st.plotly_chart(selectedOptionFigure,use_container_width=True)
 
 #-----------------------------------------------------------uploading file----------------------------------------------------------------
 with c2:
@@ -112,7 +113,7 @@ if uploaded_file is not None:
     st.session_state['signal'][st.session_state['primaryKey']] = [analogSignalTime,analogSignalValue]
     st.session_state['uploaded'][st.session_state['primaryKey']] = True
     with c1:
-        st.plotly_chart(fig)
+        st.plotly_chart(fig,use_container_width=True)
     
 #--------------------------------------------------------------------
 with c2:
