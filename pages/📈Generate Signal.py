@@ -2,6 +2,7 @@ import streamlit as st  # data web app development
 import matplotlib.pyplot as plt
 import numpy as np  # np mean, np random ,np asarray, np 
 import pandas as pd
+from scipy.interpolate import interp1d
 
 st.set_page_config(
     page_title="DSP TASK 1",
@@ -38,7 +39,50 @@ if 'button_state' not in st.session_state:
     st.session_state['button_state']=True
     
 #--------------------------------------------------------------------
- 
+def getYCoordinate(newPoint, signalAfterSampling, samplingPeriod,discreteTime):
+    summation = 0
+    for discreteTimePoint,correspondingSignalValue in zip(discreteTime, signalAfterSampling):
+        summation = summation + correspondingSignalValue * np.sinc((1 / samplingPeriod) * (newPoint - discreteTimePoint ))
+    return summation
+
+def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBox):
+    # get the index of the signal from the chosen string
+
+    selectedOptionFigure, selectedOptionAxis = plt.subplots(1, 1)
+    analogSignal_time = signalX
+    analogSignalValue = signalY
+    selectedOptionAxis.grid()
+    
+    # st.plotly_chart(selectedOptionFigure)
+
+    samplingFrequency = st.sidebar.slider('Sampling frequency (Hz)', 1, 100, 2)
+    print(samplingFrequency)
+    samplingPeriod = 1 / samplingFrequency
+    
+    #the equivalent to line 53
+    # discreteTimeUnNormalised = np.arange(analogSignal_time[0]/samplingPeriod, analogSignal_time[-1] / samplingPeriod)
+    # discreteTime = discreteTimeUnNormalised * samplingPeriod
+    
+    #the equivalent to the lines 49 and 50
+    discreteTime = np.arange(analogSignal_time[0],analogSignal_time[-1],samplingPeriod)
+        
+    predict = interp1d(analogSignal_time, analogSignalValue, kind='quadratic')
+    signalAfterSampling = np.array([predict(timePoint) for timePoint in discreteTime])
+
+    # reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 200,endpoint=False)
+    #line 63 takes high processing time than 61 because it includes much more points to process
+    reconstructionTimeAxis = analogSignal_time
+    signalAfterReconstruction = np.array([getYCoordinate(timePoint, signalAfterSampling, samplingPeriod,discreteTime) for timePoint in reconstructionTimeAxis])
+    
+    if originalCheckBox:
+        selectedOptionAxis.plot(analogSignal_time, analogSignalValue)
+    if sampleCheckBox:
+        selectedOptionAxis.plot(discreteTime, signalAfterSampling,'r.')
+    if reconstructionCheckBox:
+        selectedOptionAxis.plot(reconstructionTimeAxis, signalAfterReconstruction, 'y--')
+    
+    st.plotly_chart(selectedOptionFigure)
+
 with c2:
     uploaded_file = st.file_uploader("Choose a CSV file 📂 ")
 
@@ -106,18 +150,6 @@ else:
     st.session_state['noise'] = False
 
 
-## change state every click
-# if st.sidebar.button('Noise'):
-#     if st.session_state['button_state']==True:
-#         st.session_state['noise'] = True
-#         st.session_state['button_state']=False
-#     else:
-#         st.session_state['noise'] = False
-#         st.session_state['button_state']=True
-
-# if st.sidebar.button('➖Delete noise'):
-#     st.session_state['noise'] = False
-
 # add noise or do not
 if st.session_state['noise']:
     changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time) + noise
@@ -154,17 +186,19 @@ if st.sidebar.button('➖Delete Signal'):
         st.session_state['sum'][1] -= st.session_state['signal'][index][1]
         st.session_state['signal'].pop(index)
 
-with c1:
-    # showing the signal according to the changes of the sidebar sliders
-    changeableSignalFigure, changeableSignalAxis = plt.subplots(1, 1)
-    changeableSignalAxis.plot(st.session_state['sum'][0], st.session_state['sum'][1],color=color, linewidth=3)
-    changeableSignalAxis.grid()
-    st.plotly_chart(changeableSignalFigure,  linewidth=3)
 
 with c2:
     original_signal=st.checkbox('Original signal')
     reconstructed_signal=st.checkbox('Reconstructed signal')
     sampling_point=st.checkbox('Sampling Points')
+
+with c1:
+    # showing the summation of signals
+    # changeableSignalFigure, changeableSignalAxis = plt.subplots(1, 1)
+    # changeableSignalAxis.plot(st.session_state['sum'][0], st.session_state['sum'][1],color=color, linewidth=3)
+    # changeableSignalAxis.grid()
+    # st.plotly_chart(changeableSignalFigure,  linewidth=3)
+    sample(st.session_state['sum'][0],st.session_state['sum'][1],original_signal,sampling_point,reconstructed_signal)
 
 with c2:
     
@@ -175,17 +209,6 @@ with c2:
             st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index),disabled = True)
             continue
         st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index))
-
-
-# viewing the generated signals
-# for index, sgnal in st.session_state['signal'].items():
-#     if st.session_state['checkBoxes'][index]:
-#         st.write('Signal {}'.format(index))
-#         signalFigure, signalAxis = plt.subplots(1, 1)
-#         signalAxis.plot(sgnal[0], sgnal[1], linewidth=3)
-#         signalAxis.grid()
-#         st.plotly_chart(signalFigure, linewidth=3,use_container_width=True)
-
 
 
 #--------------------------------------------------------------------
