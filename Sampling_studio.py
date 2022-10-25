@@ -54,7 +54,7 @@ def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBo
     analogSignal_time = signalX
     analogSignalValue = signalY
     selectedOptionAxis.grid()
-    font1 = {'family':'serif','color':'white','size':20}
+    font1 = {'family':'serif','color':'white','size':18}
     plt.xlabel("Time (seconds)",fontdict = font1)
     plt.ylabel("Amplitude",fontdict = font1)
     # st.plotly_chart(selectedOptionFigure)
@@ -72,9 +72,9 @@ def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBo
     predict = interp1d(analogSignal_time, analogSignalValue, kind='quadratic')
     signalAfterSampling = np.array([predict(timePoint) for timePoint in discreteTime])
 
-    reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 200,endpoint=False)
+    # reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 200,endpoint=False)
     #line 63 takes high processing time than 61 because it includes much more points to process
-    # reconstructionTimeAxis = analogSignal_time
+    reconstructionTimeAxis = analogSignal_time
     signalAfterReconstruction = np.array([getYCoordinate(timePoint, signalAfterSampling, samplingPeriod,discreteTime) for timePoint in reconstructionTimeAxis])
     
     if originalCheckBox:
@@ -87,14 +87,8 @@ def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBo
     st.plotly_chart(selectedOptionFigure,use_container_width=True)
 
 #-----------------------------------------------------------uploading file----------------------------------------------------------------
-samplingFrequency = st.sidebar.slider('Sampling frequency (Hz)', 1, 100, 2)
-
 with c2:
     uploaded_file = st.file_uploader("Choose a CSV file 📂 ")
-# with c2:
-    original_signal=st.checkbox('Original signal',value = True)
-    reconstructed_signal=st.checkbox('Reconstructed signal')
-    sampling_point=st.checkbox('Sampling Points')
 
 
 if uploaded_file is not None:
@@ -121,14 +115,17 @@ if uploaded_file is not None:
     if 'uploaded' not in st.session_state:
         st.session_state['uploaded'] = {}
     
-    # st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
-    # st.session_state['signal'][st.session_state['primaryKey']] = [analogSignalTime,analogSignalValue]
-    # st.session_state['uploaded'][st.session_state['primaryKey']] = True
+    st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
+    st.session_state['signal'][st.session_state['primaryKey']] = [analogSignalTime,analogSignalValue]
+    st.session_state['uploaded'][st.session_state['primaryKey']] = True
     with c1:
-        # st.plotly_chart(fig,use_container_width=True)
-        sample(analogSignalTime,analogSignalValue,original_signal,sampling_point,reconstructed_signal,samplingFrequency)
+        st.plotly_chart(fig,use_container_width=True)
     
 #--------------------------------------------------------------------
+with c2:
+    original_signal=st.checkbox('Original signal')
+    reconstructed_signal=st.checkbox('Reconstructed signal')
+    sampling_point=st.checkbox('Sampling Points')
 
 #-----------------------------------------------------------sliders----------------------------------------------------------------
 #sliders
@@ -137,7 +134,7 @@ with c2:
 if uploaded_file is None:
     amplitude = st.sidebar.slider('Amplitude', 1, 10, 1)
     frequency = st.sidebar.slider('Frequency (Hz)', 1, 20, 1)
-# samplingFrequency = st.sidebar.slider('Sampling frequency (Hz)', 1, 100, 2)
+samplingFrequency = st.sidebar.slider('Sampling frequency (Hz)', 1, 100, 2)
 
 # if st.session_state['noise']:
 # snr_db = st.sidebar.slider('SNR (dB)', 1, 50, 1)  # units
