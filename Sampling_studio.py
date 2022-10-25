@@ -217,9 +217,8 @@ if uploaded_file is None:
     with c2:
         # expander for the generated signals checkboxes
         expander = st.expander('Generated signals')
-        
+        atLeastOneAdded = False
         for index, sgnal in st.session_state['signal'].items():
-            
             if st.session_state['uploaded'][index]:
                 st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index),disabled = True)
                 continue
@@ -228,15 +227,14 @@ if uploaded_file is None:
 
     
         # deleting the selected signals from the checkboxes and from the st.session_state['signal']
-        # if atLeastOneAdded:
-
-        if st.button('➖Delete Signal')  :
-
-            for index in chosenCheckBoxes:
-                st.session_state['checkBoxes'].pop(index)
-                st.session_state['sum'][1] -= st.session_state['signal'][index][1]
-                st.session_state['signal'].pop(index)
-                # st.session_state['primaryKey'] -= 1
+        if atLeastOneAdded:
+            if st.button('➖Delete Signal')  :
+                for index in chosenCheckBoxes:
+                    st.session_state['checkBoxes'].pop(index)
+                    st.session_state['sum'][1] -= st.session_state['signal'][index][1]
+                    st.session_state['signal'].pop(index)
+                    # st.session_state['primaryKey'] -= 1
+                st.experimental_rerun()
 
 
     #--------------------------------------------------------------------
