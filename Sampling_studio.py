@@ -14,9 +14,11 @@ st.set_page_config(
 
 c1, c2 = st.columns((4, 2),gap="small")
 
-
+uploaded_file = st.sidebar.file_uploader("Choose a CSV file 📂 ")
 # st.title('Customise your signal')
 
+with c2:
+    color = st.color_picker('Pick the signal color', '#1f72ab')
 
 if 'noise' not in st.session_state:
     st.session_state['noise'] = False
@@ -35,6 +37,7 @@ if 'uploaded' not in st.session_state:
 
 if 'sum' not in st.session_state:
     st.session_state['sum'] = [np.linspace(0, 5, 3000),np.zeros(3000)]
+    st.session_state['sum'][1] = np.sin(2*np.pi*st.session_state['sum'][0])
 
 if 'button_state' not in st.session_state:
     st.session_state['button_state']=True
@@ -57,6 +60,7 @@ def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBo
     font1 = {'family':'serif','color':'white','size':20}
     plt.xlabel("Time (seconds)",fontdict = font1)
     plt.ylabel("Amplitude",fontdict = font1)
+    selectedOptionAxis.plot(analogSignal_time,analogSignalValue,color=color,linewidth=4)
     # st.plotly_chart(selectedOptionFigure)
 
     print(samplingFrequency)
@@ -72,30 +76,34 @@ def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBo
     predict = interp1d(analogSignal_time, analogSignalValue, kind='quadratic')
     signalAfterSampling = np.array([predict(timePoint) for timePoint in discreteTime])
 
-    reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 200,endpoint=False)
+    # reconstructionTimeAxis = np.linspace(analogSignal_time[0], analogSignal_time[-1], 200,endpoint=False)
     #line 63 takes high processing time than 61 because it includes much more points to process
-    # reconstructionTimeAxis = analogSignal_time
+    reconstructionTimeAxis = analogSignal_time
     signalAfterReconstruction = np.array([getYCoordinate(timePoint, signalAfterSampling, samplingPeriod,discreteTime) for timePoint in reconstructionTimeAxis])
     
     if originalCheckBox:
         selectedOptionAxis.plot(analogSignal_time, analogSignalValue)
     if sampleCheckBox:
-        selectedOptionAxis.plot(discreteTime, signalAfterSampling,'r.')
+        selectedOptionAxis.plot(discreteTime, signalAfterSampling,'r.',linewidth=3)
     if reconstructionCheckBox:
-        selectedOptionAxis.plot(reconstructionTimeAxis, signalAfterReconstruction, 'y--')
+        selectedOptionAxis.plot(reconstructionTimeAxis, signalAfterReconstruction, 'y--',linewidth=3)
     
     st.plotly_chart(selectedOptionFigure,use_container_width=True)
 
 #-----------------------------------------------------------uploading file----------------------------------------------------------------
-samplingFrequency = st.sidebar.slider('Sampling frequency (Hz)', 1, 100, 2)
+
+    
 
 with c2:
-    uploaded_file = st.file_uploader("Choose a CSV file 📂 ")
+
 # with c2:
     original_signal=st.checkbox('Original signal',value = True)
     reconstructed_signal=st.checkbox('Reconstructed signal')
     sampling_point=st.checkbox('Sampling Points')
 
+samplingFrequency = 1
+if reconstructed_signal or sampling_point:
+    samplingFrequency = st.sidebar.slider('Sampling frequency (Hz)', 1, 100, 2)
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
@@ -110,7 +118,7 @@ if uploaded_file is not None:
         font1 = {'family':'serif','color':'white','size':20}
         plt.xlabel("Time (seconds)",fontdict = font1)
         plt.ylabel("Amplitude",fontdict = font1)
-        ax.plot(analogSignalTime,analogSignalValue)
+        ax.plot(analogSignalTime,analogSignalValue,color=color,linewidth=4)
     # st.write(type(analogSignalTime))
     # st.write(type(analogSignalValue))
     
@@ -132,8 +140,8 @@ if uploaded_file is not None:
 
 #-----------------------------------------------------------sliders----------------------------------------------------------------
 #sliders
-with c2:
-    color = st.color_picker('Pick the signal color', '#00f900')
+# with c2:
+#     color = st.color_picker('Pick the signal color', '#00f900')
 if uploaded_file is None:
     amplitude = st.sidebar.slider('Amplitude', 1, 10, 1)
     frequency = st.sidebar.slider('Frequency (Hz)', 1, 20, 1)
@@ -199,14 +207,7 @@ if uploaded_file is None:
 
 
 
-
-    # deleting the selected signals from the checkboxes and from the st.session_state['signal']
-    if st.sidebar.button('➖Delete Signal'):
-        for index in chosenCheckBoxes:
-            st.session_state['checkBoxes'].pop(index)
-            st.session_state['sum'][1] -= st.session_state['signal'][index][1]
-            st.session_state['signal'].pop(index)
-
+  
 
    
 
@@ -216,26 +217,46 @@ if uploaded_file is None:
     with c2:
         # expander for the generated signals checkboxes
         expander = st.expander('Generated signals')
+        
         for index, sgnal in st.session_state['signal'].items():
+            
             if st.session_state['uploaded'][index]:
                 st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index),disabled = True)
                 continue
+            atLeastOneAdded = True
             st.session_state['checkBoxes'][index] = expander.checkbox('signal {}'.format(index))
+
+    
+        # deleting the selected signals from the checkboxes and from the st.session_state['signal']
+        # if atLeastOneAdded:
+
+        if st.button('➖Delete Signal')  :
+
+            for index in chosenCheckBoxes:
+                st.session_state['checkBoxes'].pop(index)
+                st.session_state['sum'][1] -= st.session_state['signal'][index][1]
+                st.session_state['signal'].pop(index)
+                # st.session_state['primaryKey'] -= 1
 
 
     #--------------------------------------------------------------------
     #save file
     if st.button('Save as CSV 📩'):
-        if len(st.session_state['signal'] )==0:
-            st.warning('No signal is generated', icon="⚠️")
-        elif len(chosenCheckBoxes)==0:
-            st.warning('Check the required signal', icon="⚠️")
-        else:
-            for checkBoxIndex in chosenCheckBoxes:
-                data = {'t':st.session_state['signal'][checkBoxIndex][0],
-                        'signal':st.session_state['signal'][checkBoxIndex][1]}
-                df = pd.DataFrame(data)
-                df.set_index('t', inplace=True)
-                df.to_csv('Signal {}.csv'.format(checkBoxIndex))
-                st.success("The file has been saved successfully", icon="✅")
+        # if len(st.session_state['signal'] )==0:
+        #     st.warning('No signal is generated', icon="⚠️")
+        # elif len(chosenCheckBoxes)==0:
+        #     st.warning('Check the required signal', icon="⚠️")
+        # else:
+            # for checkBoxIndex in chosenCheckBoxes:
+                # data = {'t':st.session_state['signal'][checkBoxIndex][0],
+                #         'signal':st.session_state['signal'][checkBoxIndex][1]}
+                # df = pd.DataFrame(data)
+                # df.set_index('t', inplace=True)
+                # df.to_csv('Signal {}.csv'.format(checkBoxIndex))
+                # st.success("The file has been saved successfully", icon="✅")
 
+        data = {'t':st.session_state['sum'][0],'signal':st.session_state['sum'][1]}
+        df = pd.DataFrame(data)
+        df.set_index('t', inplace=True)
+        df.to_csv('Signal {}.csv'.format(st.session_state['primaryKey']))
+        st.success("The file has been saved successfully", icon="✅")
