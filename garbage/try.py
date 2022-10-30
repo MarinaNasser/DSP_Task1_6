@@ -1,5 +1,5 @@
 import numpy as np
-from scipy import signal
+from scipy import signal,fft,fftpack
 x = np.linspace(0, 10, 20, endpoint=False)
 y = np.cos(-x**2/6.0)
 f = signal.resample(y, 100)
@@ -157,3 +157,36 @@ plt.show()
 
 #-------------------------------------------- sampling----------------------------------------------------------------------#
 
+    # st.write(type(analogSignalTime))
+    # st.write(type(analogSignalValue))
+    
+    # if 'primaryKey' not in st.session_state:
+    #     st.session_state['primaryKey'] = 0
+    # if 'signal' not in st.session_state:
+    #     st.session_state['signal'] = {}
+    # if 'uploaded' not in st.session_state:
+    #     st.session_state['uploaded'] = {}
+    
+    # st.session_state['primaryKey'] = st.session_state['primaryKey'] + 1
+    # st.session_state['signal'][st.session_state['primaryKey']] = [analogSignalTime,analogSignalValue]
+    # st.session_state['uploaded'][st.session_state['primaryKey']] = True
+    
+
+amplitude = np.abs(scipy.fft.rfft(total_signals))
+frequency = scipy.fft.rfftfreq(len(initial_time), (initial_time[1]-initial_time[0]))
+indices = find_peaks(amplitude)
+if len(indices[0])>0 :
+    max_freq=round(frequency[indices[0][-1]])
+else:
+    max_freq=1   
+
+st.write(max_freq)
+
+if sampling or interpolation_check_box and len(indices[0])>0 :
+    sampling_options = st.sidebar.selectbox('Sampling Frequency (Hz)' ,["Customized Sampling Frequency", "Relative to Maximum Frequency"], key="Options")
+    if sampling_options == "Customized Sampling Frequency":
+        sampling_frequency = st.sidebar.slider(label= "",min_value=1,max_value=100,value=1,step=1)
+    else:
+        sampling_frequency = st.sidebar.slider(label= "",min_value=1,max_value=200,value=2*max_freq,step=1)
+else:
+    sampling_frequency=1
