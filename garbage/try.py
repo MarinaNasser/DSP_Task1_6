@@ -171,6 +171,7 @@ plt.show()
     # st.session_state['signal'][st.session_state['primaryKey']] = [analogSignalTime,analogSignalValue]
     # st.session_state['uploaded'][st.session_state['primaryKey']] = True
     
+import scipy
 
 amplitude = np.abs(scipy.fft.rfft(total_signals))
 frequency = scipy.fft.rfftfreq(len(initial_time), (initial_time[1]-initial_time[0]))
@@ -180,13 +181,4 @@ if len(indices[0])>0 :
 else:
     max_freq=1   
 
-st.write(max_freq)
 
-if sampling or interpolation_check_box and len(indices[0])>0 :
-    sampling_options = st.sidebar.selectbox('Sampling Frequency (Hz)' ,["Customized Sampling Frequency", "Relative to Maximum Frequency"], key="Options")
-    if sampling_options == "Customized Sampling Frequency":
-        sampling_frequency = st.sidebar.slider(label= "",min_value=1,max_value=100,value=1,step=1)
-    else:
-        sampling_frequency = st.sidebar.slider(label= "",min_value=1,max_value=200,value=2*max_freq,step=1)
-else:
-    sampling_frequency=1
