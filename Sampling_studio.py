@@ -13,6 +13,8 @@ st.set_page_config(
     layout = "wide",
     initial_sidebar_state="expanded"
 )
+maxSize = 2000
+maxTime = 20
 
 column1, column2 = st.columns((4, 1), gap="small")
 
@@ -40,7 +42,7 @@ if 'uploaded' not in st.session_state:
     st.session_state['uploaded'] = {}
 
 if 'sum' not in st.session_state:
-    st.session_state['sum'] = [np.linspace(0, 5, 3000),np.zeros(3000)]
+    st.session_state['sum'] = [np.linspace(0, maxTime, maxSize),np.zeros(maxSize)]
 
 if 'button_state' not in st.session_state:
     st.session_state['button_state']=True
@@ -58,11 +60,18 @@ def getFMax(xAxis,yAxis):
         max_freq=1   
     return max_freq
   
+# def getYCoordinate(newTimeAxisPoint, signalAfterSampling, samplingPeriod):
+#     summation = 0
+#     for n in range(0, len(signalAfterSampling)):
+#         summation = summation + signalAfterSampling[n] * np.sinc((1 / samplingPeriod) * (newTimeAxisPoint - n * samplingPeriod))
+#     print(summation)
+#     return summation
 
-
-#-----------------------------------------------------------sinc interpolation----------------------------------------------------------------
+# #-----------------------------------------------------------sinc interpolation----------------------------------------------------------------
 def getYCoordinate(newPoint, signalAfterSampling, samplingPeriod,discreteTime):
     summation = 0
+    
+    
     for discreteTimePoint,correspondingSignalValue in zip(discreteTime, signalAfterSampling):
         summation = summation + correspondingSignalValue * np.sinc((1 / samplingPeriod) * (newPoint - discreteTimePoint ))
     return summation
@@ -108,7 +117,8 @@ def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBo
     plt.xlabel("Time (seconds)",fontdict = font1)
     plt.ylabel("Amplitude",fontdict = font1)
 
-    print(samplingFrequency)
+    # print(samplingFrequency)
+    samplingFrequency += 2
     samplingPeriod = 1 / samplingFrequency
     
     discreteTime = np.arange(analogSignal_time[0],analogSignal_time[-1],samplingPeriod)
@@ -140,19 +150,21 @@ with column2:
     sampling_point=st.checkbox('Sampling Points')
 
 with column2:
-    samplingFrequency = 1
+    samplingFrequency = 4
     if reconstructed_signal or sampling_point:
-        # initial = getFMax(analogSignal_time,changeableSignal)
-        
-        samplingFrequency =st.session_state['fMax']* st.slider('Fs/Fmax', 1.0, 10.0, 2.0)
+        option = st.selectbox(' ',label_visibility='hidden',options =('Fs/Fmax', 'Fs'))
+        if option == 'Fs/Fmax':
+            samplingFrequency =(st.session_state['fMax'])* st.slider(' ', 1.0, 10.0, 2.0,0.1)
+        else:
+            samplingFrequency =st.slider(' ', 1, 100, samplingFrequency)
 
 #-----------------------------------------------------------generated signals----------------------------------------------------------------
 
 if uploaded_file is None:
-    frequency = st.sidebar.slider('Frequency (Hz)', 1, 20, 1)
+    frequency = st.sidebar.slider('Frequency (Hz)', 1, 50, 1)
     amplitude = st.sidebar.slider('Amplitude', 1, 10, 1)
     
-    analogSignal_time = np.linspace(0, 5, 3000) #x-axis
+    analogSignal_time = np.linspace(0, maxTime, maxSize) #x-axis
     changeableSignal = amplitude * np.sin(2 * np.pi * frequency * analogSignal_time) #y-axis
 
 
