@@ -190,3 +190,18 @@ if sampling or interpolation_check_box and len(indices[0])>0 :
         sampling_frequency = st.sidebar.slider(label= "",min_value=1,max_value=200,value=2*max_freq,step=1)
 else:
     sampling_frequency=1
+    
+#-------------------------------------------- save----------------------------------------------------------------------#
+
+            # if len(st.session_state['signal'] )==0:
+            #     st.warning('No signal is generated', icon="⚠️")
+            # elif len(chosenCheckBoxes)==0:
+            #     st.warning('Check the required signal', icon="⚠️")
+            # else:
+                # for checkBoxIndex in chosenCheckBoxes:
+                    # data = {'t':st.session_state['signal'][checkBoxIndex][0],
+                    #         'signal':st.session_state['signal'][checkBoxIndex][1]}
+                    # df = pd.DataFrame(data)
+                    # df.set_index('t', inplace=True)
+                    # df.to_csv('Signal {}.csv'.format(checkBoxIndex))
+                    # st.success("The file has been saved successfully", icon="✅")
