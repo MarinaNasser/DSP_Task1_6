@@ -58,6 +58,8 @@ def getFMax(xAxis,yAxis):
         max_freq=1   
     return max_freq
   
+
+
 #-----------------------------------------------------------sinc interpolation----------------------------------------------------------------
 def getYCoordinate(newPoint, signalAfterSampling, samplingPeriod,discreteTime):
     summation = 0
@@ -65,7 +67,10 @@ def getYCoordinate(newPoint, signalAfterSampling, samplingPeriod,discreteTime):
         summation = summation + correspondingSignalValue * np.sinc((1 / samplingPeriod) * (newPoint - discreteTimePoint ))
     return summation
 
+
+
 #-----------------------------------------------------------sampling----------------------------------------------------------------
+
 def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBox,samplingFrequency):
 
     snr_db = 50
