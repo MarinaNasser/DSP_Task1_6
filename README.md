@@ -2,8 +2,7 @@
 
 Systems and biomedical engineering, Cairo University.
 Level 3, 2nd semester.
-### Course:
-    Digital signal processing, Task 1 (11/10/2022)
+### Course: Digital signal processing, Task 1 (11/10/2022)
 
 ### Members names:
     1. Marina Nasser sec:2 BN:12
