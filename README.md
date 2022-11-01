@@ -5,10 +5,10 @@ Level 3, 2nd semester.
 ### Course: Digital signal processing, Task 1 (11/10/2022)
 
 ### Members
-    | Team Members' Names                               | Section| B.N. |
-    |---------------------------------------------------|:------:|:----:|
-    | [Marina Nasser](https://github.com/MarinaNasser)  |    2   |  12  |
-    | [Michael Hany](https://github.com/michaelhany510) |    2   |  40  |
+| Team Members' Names                               | Section| B.N. |
+|---------------------------------------------------|:------:|:----:|
+| [Marina Nasser](https://github.com/MarinaNasser)  |    2   |  12  |
+| [Michael Hany](https://github.com/michaelhany510) |    2   |  40  |
 
 
 ## Task description:
