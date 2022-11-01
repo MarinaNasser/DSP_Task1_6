@@ -26,8 +26,14 @@ In this studio you can:
 ![Capture 3](https://user-images.githubusercontent.com/69060386/199189873-b4b426ed-0822-4c55-8424-bcd2e242722f.PNG)
 
 
+<<<<<<< Updated upstream
 ## Science behind the task:
 
+||||||| constructed merge base
+
+=======
+![alt tes=xt]()
+>>>>>>> Stashed changes
 Signal Sampling: Nyquist - Shannon Theorem
 
    A continuous-time (or analog) signal can be stored in a digital computer, in the form of equidistant discrete points or samples. The higher the sampling rate (or sampling frequency, fS), the more accurate would be the stored information and the signal reconstruction from its samples. However, a high sampling rate produces a large volume of data to be stored and makes necessary the use of a very fast analog-to-digital converter.

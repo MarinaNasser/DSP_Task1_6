@@ -6,6 +6,7 @@ import pandas as pd
 from scipy.interpolate import interp1d
 import scipy
 from scipy.signal import find_peaks
+from scipy import fftpack
 
 st.set_page_config(
     page_title="DSP TASK 1",
@@ -59,13 +60,6 @@ def getFMax(xAxis,yAxis):
     else:
         max_freq=1   
     return max_freq
-  
-# def getYCoordinate(newTimeAxisPoint, signalAfterSampling, samplingPeriod):
-#     summation = 0
-#     for n in range(0, len(signalAfterSampling)):
-#         summation = summation + signalAfterSampling[n] * np.sinc((1 / samplingPeriod) * (newTimeAxisPoint - n * samplingPeriod))
-#     print(summation)
-#     return summation
 
 # #-----------------------------------------------------------sinc interpolation----------------------------------------------------------------
 def getYCoordinate(newPoint, signalAfterSampling, samplingPeriod,discreteTime):
@@ -118,7 +112,7 @@ def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBo
     plt.ylabel("Amplitude",fontdict = font1)
 
     # print(samplingFrequency)
-    samplingFrequency += 2
+    # samplingFrequency += 2
     samplingPeriod = 1 / samplingFrequency
     
     discreteTime = np.arange(analogSignal_time[0],analogSignal_time[-1],samplingPeriod)
@@ -188,6 +182,7 @@ if uploaded_file is None:
         st.session_state['sum'][1] = st.session_state['sum'][1] + st.session_state['signal'][PK][1]
         st.session_state['amp_freq'][PK] = [amplitude,frequency]
         st.session_state['fMax'] = getFMax(st.session_state['sum'][0],st.session_state['sum'][1])
+        st.experimental_rerun()
 
 
     with column1:
@@ -212,6 +207,7 @@ if uploaded_file is None:
                     st.session_state['checkBoxes'].pop(index)
                     st.session_state['sum'][1] -= st.session_state['signal'][index][1]
                     st.session_state['signal'].pop(index)
+                    st.session_state['fMax'] = getFMax(st.session_state['sum'][0],st.session_state['sum'][1])
                     # st.session_state['primaryKey'] -= 1
                 st.experimental_rerun()
 
@@ -238,3 +234,4 @@ if uploaded_file is not None:
     with column1:
         st.session_state['fMax'] = getFMax(analogSignalTime,analogSignalValue)
         sample(analogSignalTime,analogSignalValue,original_signal,sampling_point,reconstructed_signal,samplingFrequency)
+st.write(st.session_state['fMax'])
