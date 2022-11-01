@@ -19,6 +19,9 @@ In this studio you can:
   5. Do sampling
   6. Save your signal in a CSV file
   7. Finally you can do all features above on an uploaded signal of your choice.
+![Capture](https://user-images.githubusercontent.com/69060386/199189833-442712aa-3f7d-4544-a308-1f8a1178f9fe.PNG)
+![Capture 2](https://user-images.githubusercontent.com/69060386/199189859-a272c5f2-5ef3-47d4-80a1-8c8bc17ee962.PNG)
+![Capture 3](https://user-images.githubusercontent.com/69060386/199189873-b4b426ed-0822-4c55-8424-bcd2e242722f.PNG)
 
 
 ## Science behind the task:
@@ -31,6 +34,4 @@ Nyquist-Shannon sampling theorem is stated as follows:
 
    A signal can be exactly reconstructed from its samples if the sampling frequency is greater than twice the highest frequency component in the signal.
 
-
-![Screenshot (64)](https://user-images.githubusercontent.com/69060386/199189131-6d242c05-ab31-4911-b502-682c4e723252.png)
 
