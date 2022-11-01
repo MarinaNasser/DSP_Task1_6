@@ -32,4 +32,5 @@ Nyquist-Shannon sampling theorem is stated as follows:
    A signal can be exactly reconstructed from its samples if the sampling frequency is greater than twice the highest frequency component in the signal.
 
 
+![Screenshot (64)](https://user-images.githubusercontent.com/69060386/199189131-6d242c05-ab31-4911-b502-682c4e723252.png)
 
