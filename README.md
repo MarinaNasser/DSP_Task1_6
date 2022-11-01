@@ -1,7 +1,7 @@
 # Sampling-Studio
 
 Systems and biomedical engineering, Cairo University.
-Level 3, 2nd semester.
+Level 3, 1st semester.
 ### Course: Digital signal processing, Task 1 (11/10/2022)
 
 ### Members
