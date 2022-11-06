@@ -70,8 +70,6 @@ def getYCoordinate(newPoint, signalAfterSampling, samplingPeriod,discreteTime):
         summation = summation + correspondingSignalValue * np.sinc((1 / samplingPeriod) * (newPoint - discreteTimePoint ))
     return summation
 
-
-
 #-----------------------------------------------------------sampling----------------------------------------------------------------
 
 def sample(signalX,signalY,originalCheckBox,sampleCheckBox,reconstructionCheckBox,samplingFrequency):
